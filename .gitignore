@@ -1,0 +1,16 @@
+# Imagenes intermedias extraidas del PDF (se regeneran con extraer-pdf.ps1)
+assets/pdf-img/
+assets/raw/
+
+# Generados por build.ps1 a partir de assets/
+assets/web/
+
+# Material audiovisual: no es parte de la landing
+reel-*/
+carrusel-*/
+*.mp4
+*.mov
+
+# Sistema
+Thumbs.db
+desktop.ini
