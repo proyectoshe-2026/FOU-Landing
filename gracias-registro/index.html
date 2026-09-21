@@ -29,7 +29,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     --text-muted:  #6B6153;
     --text-on-ink: #F4EFE4;
     --text-on-ink-muted: #B0AA9E;
-    --maxw: 720px;
+    --maxw: 840px;
   }
 
   *{ box-sizing:border-box; }
@@ -131,6 +131,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color:var(--text-on-ink);
   }
   .lead b{ color:var(--green); font-weight:600; }
+  /* "Hacelo aca": baja a la seccion de pago, no sale de la pagina. */
+  .lead .aca{
+    display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+    font-weight:600; color:var(--text-on-ink);
+    text-decoration:underline; text-decoration-color:var(--green);
+    text-decoration-thickness:2px; text-underline-offset:4px;
+  }
+  .lead .aca svg{ color:var(--green); }
+  @media (prefers-reduced-motion: no-preference){
+    .lead .aca svg{ animation:bajar 1.6s ease-in-out infinite; }
+    html{ scroll-behavior:smooth; }
+  }
+  @keyframes bajar{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
 
   /* ---------- datos utiles ---------- */
   .tiles{
@@ -150,20 +163,84 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .tile p.small{ font-size:13px; color:var(--text-on-ink-muted); }
   @media (max-width:640px){ .tiles{ grid-template-columns:1fr; } }
 
-  .note{ margin-top:22px; font-size:13px; color:var(--text-on-ink-muted); }
-  .note b{ color:var(--text-on-ink); font-weight:600; }
 
-  /* ---------- boton de whatsapp ---------- */
-  .wa-btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:10px;
-    margin-top:26px;
-    background:var(--green); color:var(--ink);
-    font-family:'Montserrat', sans-serif; font-weight:700; font-size:15px;
-    padding:15px 26px; border-radius:6px; border:2px solid transparent;
-    text-decoration:none; white-space:nowrap;
-    transition:transform .18s ease, box-shadow .18s ease;
+  /* ---------- botones ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    font-family:'Montserrat',sans-serif; font-weight:700; font-size:14.5px;
+    padding:14px 22px; border-radius:6px; border:2px solid transparent;
+    text-decoration:none; white-space:nowrap; cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
   }
-  .wa-btn:hover{ transform:translateY(-2px); box-shadow:0 14px 26px -12px rgba(155,234,46,0.75); }
+  .btn:active{ transform:translateY(1px); }
+  .btn:focus-visible{ outline:3px solid var(--blue); outline-offset:3px; }
+  .btn-primary{ background:var(--green); color:var(--ink); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 26px -12px rgba(155,234,46,0.75); }
+  .btn-light{ background:var(--text-on-ink); color:var(--ink); }
+  .btn-light:hover{ transform:translateY(-2px); background:#fff; }
+  .btn-block{ width:100%; }
+
+  /* ---------- pago ---------- */
+  .pay{ margin-top:46px; text-align:left; }
+  .pay-step{ display:flex; align-items:flex-start; gap:14px; }
+  .pay-step .num{
+    flex:none; width:32px; height:32px; border-radius:50%;
+    background:var(--green); color:var(--ink);
+    font-family:'Montserrat',sans-serif; font-weight:800; font-size:15px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pay-step h2{ font-size:clamp(20px,2.8vw,24px); padding-top:3px; }
+  .pay-step p{ margin-top:6px; font-size:14.5px; color:var(--text-on-ink-muted); }
+  .pay-step p b{ color:var(--green); font-weight:600; }
+
+  .pay-grid{ margin-top:20px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  @media (max-width:640px){ .pay-grid{ grid-template-columns:1fr; } }
+  .pcard{
+    background:#151515; border:1px solid rgba(244,239,228,0.14); border-radius:12px;
+    padding:18px; display:flex; flex-direction:column;
+  }
+  .pcard h3{ font-size:17px; }
+  .pcard .pdate{ margin-top:4px; font-size:13px; color:var(--text-on-ink-muted); }
+  .pcard .price{ margin:14px 0 16px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .pcard .price s{ font-size:14px; color:var(--text-on-ink-muted); }
+  .pcard .price strong{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:24px; color:var(--text-on-ink); }
+  .pcard .btn{ margin-top:auto; white-space:normal; text-align:center; padding:13px 14px; }
+
+  .transfer{
+    margin-top:12px; background:#151515; border:1px solid rgba(244,239,228,0.14);
+    border-radius:12px; padding:20px;
+  }
+  .transfer h3{ font-size:17px; }
+  .bank{ margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; }
+  .bank > div{
+    flex:1 1 180px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:rgba(244,239,228,0.05); border:1px solid rgba(244,239,228,0.10);
+    border-radius:8px; padding:11px 14px;
+  }
+  .bank span{ display:block; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; color:var(--text-on-ink-muted); }
+  .bank b{ font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; }
+  .copy{
+    flex:none; font-family:'Montserrat',sans-serif; font-weight:700; font-size:12.5px;
+    background:transparent; color:var(--green); border:1.5px solid rgba(155,234,46,0.5);
+    border-radius:6px; padding:7px 12px; cursor:pointer;
+  }
+  .copy:hover{ border-color:var(--green); }
+  .copy:focus-visible{ outline:3px solid var(--blue); outline-offset:2px; }
+
+  .tprices{ width:100%; margin-top:16px; border-collapse:collapse; font-size:14.5px; }
+  .tprices th{
+    text-align:left; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    font-weight:700; color:var(--text-on-ink-muted); padding:0 8px 8px 0; vertical-align:bottom;
+  }
+  .tprices th small{ display:block; font-size:11px; letter-spacing:0; text-transform:none; color:var(--green); font-weight:600; margin-top:2px; }
+  .tprices td{ padding:10px 8px 10px 0; border-top:1px solid rgba(244,239,228,0.10); }
+  .tprices td:not(:first-child), .tprices th:not(:first-child){ text-align:right; padding-right:0; padding-left:8px; }
+  .tprices td strong{ font-family:'Montserrat',sans-serif; font-weight:700; }
+  .transfer .fine{ margin-top:12px; font-size:12.5px; color:var(--text-on-ink-muted); }
+
+  .send{ margin-top:30px; }
+  .send .btn{ margin-top:16px; }
+  .later{ margin-top:14px; font-size:13px; color:var(--text-on-ink-muted); }
 
   /* ---------- pie ---------- */
   .foot{
@@ -205,7 +282,100 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <p class="gracias">¡Gracias!</p>
     <h1>¡Listo, ya te pre-inscribiste!</h1>
-    <p class="lead">En breve te escribimos por WhatsApp o mail con la información para pagar. <b>La reserva del lugar solo se confirma con el pago y el envío del comprobante.</b></p>
+    <p class="lead">En breve te escribimos por WhatsApp o mail. Ya podés reservar tu lugar en las jornadas 2026.
+      <a class="aca" href="#reservar">Hacelo acá
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v15m0 0-6-6m6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <b>Recordá que solo se confirma con el pago con el envío del comprobante por WhatsApp a FOU.</b></p>
+
+    <!-- ============================================================
+         PAGO — datos de "Precios y Beneficios definidos.xlsx".
+         Hasta el 12/10 (inclusive) rige el 10% off de la primera semana
+         y el 15% por transferencia. Desde el 13/10 el script de abajo pasa
+         solo a los links y precios que estan en data-despues-*.
+         ============================================================ -->
+    <section class="pay" id="reservar" aria-labelledby="pay-title">
+
+      <div class="pay-step">
+        <span class="num" aria-hidden="true">1</span>
+        <div>
+          <h2 id="pay-title">Pagá y reservá tu lugar</h2>
+          <p data-solo-promo>Pagando hasta el 12/10 tenés <b>10% off con Mercado Pago</b> o <b>15% off por transferencia</b>.</p>
+          <p data-solo-despues hidden>Pagá con Mercado Pago o por transferencia, con <b>5% off</b>.</p>
+        </div>
+      </div>
+
+      <div class="pay-grid">
+        <article class="pcard">
+          <h3>Kinesiología</h3>
+          <p class="pdate">Sábado 31/10</p>
+          <p class="price"><s data-solo-promo>$160.000</s> <strong data-despues="$160.000">$144.000</strong></p>
+          <a class="btn btn-primary btn-block" id="mp-kinesiologia"
+             href="https://mpago.la/1mrAwVd" data-despues-href="https://mpago.la/2345LKy"
+             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </article>
+        <article class="pcard">
+          <h3>Psicología</h3>
+          <p class="pdate">Sábado 14/11</p>
+          <p class="price"><s data-solo-promo>$90.000</s> <strong data-despues="$90.000">$81.000</strong></p>
+          <a class="btn btn-primary btn-block" id="mp-psicologia"
+             href="https://mpago.la/1crFaof" data-despues-href="https://mpago.la/2b5d7qy"
+             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </article>
+        <article class="pcard">
+          <h3>Nutrición</h3>
+          <p class="pdate">Sábado 21/11</p>
+          <p class="price"><s data-solo-promo>$160.000</s> <strong data-despues="$160.000">$144.000</strong></p>
+          <!-- REVISAR: en el Excel, el link de Nutricion a precio de lista es el
+               mismo que el de Kinesiologia (mpago.la/2345LKy, "Capacitacion
+               Kinesiologia"). Cambiar data-despues-href cuando FOU pase el correcto. -->
+          <a class="btn btn-primary btn-block" id="mp-nutricion"
+             href="https://mpago.la/2axZ8JA" data-despues-href="https://mpago.la/2345LKy"
+             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
+        </article>
+      </div>
+
+      <div class="transfer">
+        <h3>O por transferencia bancaria</h3>
+        <div class="bank">
+          <div><div><span>Banco</span><b>Credicoop</b></div></div>
+          <div>
+            <div><span>Alias</span><b>fou.arg</b></div>
+            <button type="button" class="copy" data-copiar="fou.arg">Copiar</button>
+          </div>
+        </div>
+        <table class="tprices">
+          <thead>
+            <tr>
+              <th scope="col">Jornada</th>
+              <th scope="col">Transferencia <small data-despues="5% off">15% off hasta el 12/10</small></th>
+              <th scope="col">UNSAM y FOU <small>20% off</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kinesiología</td><td><strong data-despues="$152.000">$136.000</strong></td><td>$128.000</td></tr>
+            <tr><td>Psicología</td><td><strong data-despues="$85.000">$76.500</strong></td><td>$72.000</td></tr>
+            <tr><td>Nutrición</td><td><strong data-despues="$152.000">$136.000</strong></td><td>$128.000</td></tr>
+          </tbody>
+        </table>
+        <p class="fine">El 20% es para alumnos y egresados de la Diplomatura UNSAM y deportistas de FOU. Solo por transferencia y no se suma a otros beneficios.</p>
+      </div>
+
+      <div class="pay-step send">
+        <span class="num" aria-hidden="true">2</span>
+        <div>
+          <h2>Mandanos el comprobante</h2>
+          <p>Con el comprobante te dejamos el lugar confirmado.</p>
+          <a class="btn btn-light" id="wa-comprobante"
+             href="https://wa.me/5491168930497?text=%C2%A1Hola!%20Ya%20hice%20la%20reserva%20de%20mi%20vacante.%0AAdjunto%20el%20pago.%0AMi%20nombre%20es%3A%20%0AMi%20mail%20es%3A%20%0AMe%20anot%C3%A9%20a%20la%20jornada%20de%3A%20"
+             target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.15c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
+            Enviar comprobante por WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <p class="later">¿Elegiste Gestión de equipos o Preparación física? Son en 2027: te avisamos cuando abra la inscripción.</p>
+    </section>
 
     <div class="tiles">
       <div class="tile">
@@ -225,13 +395,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
-    <a class="wa-btn" href="https://wa.me/5491168930497?text=Hola!%20Ya%20me%20pre-inscrib%C3%AD%20en%20las%20jornadas%20de%20FOU%20y%20UNSAM%2C%20tengo%20una%20consulta." target="_blank" rel="noopener">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#111111" aria-hidden="true"><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 12.05 0Z"/></svg>
-      Escribinos por WhatsApp
-    </a>
-    <p class="note">
-      ¿No te llega nada en 48 h? Escribinos al WhatsApp.
-    </p>
 
   </div>
 </main>
@@ -240,6 +403,62 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <span>© 2026 FOU · Centro de entrenamiento y medicina deportiva</span>
   <span>Certificación oficial Universidad Nacional de San Martín</span>
 </footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Ultimo momento del 10% off de primera semana (los links de MP dicen
+     "hasta 12/10"). Pasada esta fecha se muestran precio de lista y 5%. */
+  var FIN_PRIMERA_SEMANA = new Date("2026-10-12T23:59:59-03:00");
+
+  if (new Date() > FIN_PRIMERA_SEMANA) {
+    document.querySelectorAll("[data-solo-promo]").forEach(function(el){ el.hidden = true; });
+    document.querySelectorAll("[data-solo-despues]").forEach(function(el){ el.hidden = false; });
+    document.querySelectorAll("[data-despues]").forEach(function(el){
+      el.textContent = el.getAttribute("data-despues");
+    });
+    document.querySelectorAll("[data-despues-href]").forEach(function(el){
+      el.href = el.getAttribute("data-despues-href");
+    });
+  }
+
+  /* Copiar el alias sin salir de la pagina. */
+  document.querySelectorAll("[data-copiar]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var texto = btn.getAttribute("data-copiar");
+      function avisar(msg){
+        btn.textContent = msg;
+        setTimeout(function(){ btn.textContent = "Copiar"; }, 2200);
+      }
+      /* Plan B: algunos navegadores (p. ej. los internos de Instagram o
+         Facebook) no dejan escribir en el portapapeles. */
+      function aMano(){
+        var ta = document.createElement("textarea");
+        ta.value = texto; ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        if (ok) { avisar("¡Copiado!"); return; }
+        // Ultimo recurso: deja el alias seleccionado para copiarlo a mano.
+        var alias = btn.parentNode.querySelector("b");
+        var range = document.createRange();
+        range.selectNodeContents(alias);
+        var sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+        avisar("Seleccionado");
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(function(){ avisar("¡Copiado!"); }, aMano);
+      } else {
+        aMano();
+      }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
