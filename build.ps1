@@ -92,6 +92,7 @@ $map = @{
   "__LOGO_BLANCO_MARCA__" = DataUri (Join-Path $web "marca-blanco.png")
   "__UNSAM__"             = DataUri (Join-Path $assets "unsam-pyg-oscuro.png")
   "__UNSAM_BLANCO__"      = DataUri (Join-Path $assets "unsam-pyg-blanco.png")
+  "__LOGO_VERDE__"        = DataUri (Join-Path $assets "fou-logo-verde.png")
   "__PATTERN_VERDE__"     = DataUri (Join-Path $web "pattern-verde.png")
   "__PATTERN_GRIS__"      = DataUri (Join-Path $web "pattern-gris.png")
 }
@@ -129,3 +130,7 @@ $outFile = Join-Path $root "index.html"
 [System.IO.File]::WriteAllText($outFile, $html, (New-Object System.Text.UTF8Encoding($false)))
 $kb = [int]((Get-Item $outFile).Length / 1KB)
 Write-Output ("index.html generado - " + $kb + " KB. Fotos faltantes: " + $faltan + " de " + $slugs.Count + ".")
+
+
+# La pagina de gracias se entrega y se publica aparte: no forma parte de
+# este repositorio. La landing redirige a ella con GRACIAS_URL (ver README).

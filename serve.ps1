@@ -13,6 +13,8 @@ while ($listener.IsListening) {
   $rel = $ctx.Request.Url.LocalPath.TrimStart("/")
   if ($rel -eq "") { $rel = "index.html" }
   $path = Join-Path $root $rel
+  # Carpetas -> index.html, para que /gracias-registro funcione igual que en el hosting.
+  if (Test-Path $path -PathType Container) { $path = Join-Path $path "index.html" }
   if (Test-Path $path -PathType Leaf) {
     $bytes = [System.IO.File]::ReadAllBytes($path)
     $ext = [System.IO.Path]::GetExtension($path).ToLower()

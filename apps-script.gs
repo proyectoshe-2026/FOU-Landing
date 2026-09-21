@@ -22,7 +22,7 @@
  * Si no, la URL sigue sirviendo la versión vieja.
  */
 
-var NOMBRE_HOJA = 'Hoja 1';   // pestaña donde se escriben los datos
+var NOMBRE_HOJA = 'Pre-inscriptos';   // pestaña donde se escriben los datos
 
 function doPost(e) {
   var datos = (e && e.parameter) ? e.parameter : {};

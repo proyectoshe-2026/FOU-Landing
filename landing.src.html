@@ -1,4 +1,18 @@
-<title>FOU × UNSAM</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Jornadas de formación profesional de FOU y la Diplomatura en Política y Gestión Deportiva de la UNSAM. Presenciales en Boedo, CABA, con certificado oficial. Cada jornada se cursa por separado.">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-59CVWFCL');</script>
+<!-- End Google Tag Manager -->
+<title>FOU y UNSAM</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Exo:wght@400;500;600&display=swap">
 <style>
   :root{
@@ -25,7 +39,9 @@
   }
 
   *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+  /* iOS agranda solo el texto de los bloques mas anchos que la pantalla (las
+     cintas miden varios miles de px): asi queda del tamano que definimos. */
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
@@ -33,6 +49,8 @@
 
   body{
     margin:0;
+    /* clip y no hidden: corta el desborde lateral sin romper el nav sticky. */
+    overflow-x:clip;
     background:var(--cream);
     color:var(--text);
     font-family:'Exo', system-ui, -apple-system, sans-serif;
@@ -84,6 +102,7 @@
   }
   .btn:active{ transform:translateY(1px); }
   .btn:focus-visible{ outline:3px solid var(--blue); outline-offset:3px; }
+  .btn:disabled{ opacity:.62; cursor:default; transform:none; box-shadow:none; }
 
   .btn-primary{ background:var(--green); color:var(--ink); }
   .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 26px -12px rgba(155,234,46,0.75); }
@@ -156,6 +175,30 @@
   .hero h1{ margin-top:20px; font-size:clamp(34px,4.6vw,56px); color:var(--text-on-ink); }
   .hero h1 em{ font-style:normal; color:var(--green); }
   .hero-sub{ margin-top:20px; max-width:52ch; font-size:17px; color:var(--text-on-ink-muted); }
+
+  /* Temas de las jornadas arriba de todo: se ven sin scrollear, para que se
+     entienda de una que son cinco focos distintos y que se elige uno. */
+  .hero-temas{ margin-top:22px; }
+  .hero-temas-label{
+    display:block;
+    font-family:'Montserrat',sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--green);
+  }
+  .hero-temas-list{ list-style:none; margin:10px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+  .hero-temas-list a{
+    display:inline-flex; align-items:baseline; gap:7px;
+    font-family:'Montserrat',sans-serif; font-weight:600; font-size:13.5px;
+    color:var(--text-on-ink); text-decoration:none;
+    padding:8px 13px; border-radius:6px;
+    background:rgba(155,234,46,0.10); border:1px solid rgba(155,234,46,0.32);
+    transition:background .16s ease, border-color .16s ease;
+  }
+  .hero-temas-list a:hover{ background:rgba(155,234,46,0.20); border-color:var(--green); }
+  .hero-temas-list b{ font-weight:600; font-size:12px; color:var(--text-on-ink-muted); }
+  @media (max-width:640px){
+    .hero-temas-list{ gap:6px; }
+    .hero-temas-list a{ font-size:12.5px; padding:7px 11px; }
+  }
 
   .hero-badges{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
   .badge{
@@ -233,10 +276,13 @@
     border-top:1px solid rgba(17,17,17,0.14);
     border-bottom:1px solid rgba(17,17,17,0.14);
   }
-  .ticker-track{ display:flex; width:max-content; animation:ticker-scroll 62s linear infinite; }
+  /* flex:none en el track, los grupos y los items: sin eso, en pantallas
+     angostas el navegador los encoge para que entren y el texto se corta. */
+  .ticker-track{ display:flex; width:max-content; flex:none; animation:ticker-scroll 62s linear infinite; }
   .ticker:hover .ticker-track, .ticker:focus-within .ticker-track{ animation-play-state:paused; }
-  .ticker-group{ display:flex; }
+  .ticker-group{ display:flex; flex:none; }
   .ticker-item{
+    flex:none;
     display:flex; align-items:center; gap:26px; padding-right:26px;
     font-family:'Montserrat',sans-serif; font-weight:600; font-size:16px;
     white-space:nowrap; letter-spacing:0.005em;
@@ -257,7 +303,25 @@
   .ticker--top:focus-visible{ outline:3px solid var(--green); outline-offset:-3px; }
   @media (max-width:640px){ .ticker--top .ticker-item{ font-size:13px; } }
   @keyframes ticker-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-  @media (max-width:640px){ .ticker{ padding:13px 0; } .ticker-item{ font-size:14px; gap:20px; padding-right:20px; } }
+  /* En celular las cintas no se desplazan: el mensaje de cada una es uno solo,
+     asi que se muestra entero, centrado y en dos lineas. El carrusel obligaba
+     a una pista de varios miles de px que los celulares recortaban. */
+  @media (max-width:640px){
+    .ticker{ padding:12px 0; }
+    .ticker-track{ animation:none; width:100%; flex:1 1 auto; justify-content:center; }
+    .ticker-group{ flex:1 1 auto; width:100%; justify-content:center; }
+    .ticker-group + .ticker-group{ display:none; }
+    .ticker-item{
+      flex:1 1 auto; width:100%; min-width:0;
+      justify-content:center; text-align:center;
+      white-space:normal; overflow-wrap:break-word;
+      gap:0; padding:0 20px; line-height:1.35;
+      font-size:13.5px;
+    }
+    .ticker-item + .ticker-item{ display:none; }
+    .ticker-sep{ display:none; }
+    .ticker--top .ticker-item{ font-size:13px; }
+  }
   @media (prefers-reduced-motion: reduce){
     .ticker-track{ animation:none; width:100%; justify-content:center; }
     .ticker-group + .ticker-group{ display:none; }
@@ -395,8 +459,14 @@
   }
   .modal .eyebrow{ color:var(--blue-deep); }
   .modal h3{ margin-top:10px; font-size:24px; }
-  .modal-facts{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px; }
-  @media (max-width:520px){ .modal-facts{ grid-template-columns:1fr 1fr; } }
+  .modal-facts{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+  .modal-bajada{ margin-top:6px; font-size:15px; color:var(--text-muted); font-style:italic; }
+  .modal-bajada:empty{ display:none; }
+  .modal-indep{
+    margin-top:14px; font-size:13.5px; color:var(--blue-deep);
+    background:var(--blue-pale); border-radius:var(--radius-sm); padding:10px 13px;
+  }
+  .modal-publico p{ margin-top:8px; font-size:14.5px; }
   .modal-fact{ background:var(--cream); border-radius:var(--radius-sm); padding:12px 14px; }
   .modal-fact span{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; color:var(--text-muted); }
   .modal-fact b{ display:block; margin-top:3px; font-family:'Montserrat',sans-serif; font-size:13.5px; }
@@ -436,12 +506,38 @@
   .price-amount{ font-family:'Montserrat',sans-serif; font-weight:900; font-size:36px; margin-top:10px; font-variant-numeric:tabular-nums; }
   .price-save{ margin-top:6px; font-size:13.5px; color:var(--green-deep); font-weight:700; }
   .price-list{ margin-top:18px; list-style:none; padding:0; flex:1; }
+  .price-cta{ margin-top:20px; width:100%; }
   .price-list li{ display:flex; gap:9px; align-items:flex-start; margin-top:10px; font-size:14px; color:var(--text-muted); }
   .price-list svg{ flex:none; margin-top:2px; color:var(--blue); }
   .pricing-note{
     margin-top:28px; background:var(--blue-pale); border-radius:var(--radius-md); padding:18px 20px;
     font-size:14.5px; color:var(--blue-deep); max-width:780px;
   }
+
+  /* ================= BENEFICIOS ================= */
+  .beneficios{
+    margin-top:26px; background:var(--paper); border:1.5px solid var(--green);
+    border-radius:var(--radius-lg); padding:24px 26px; max-width:860px;
+  }
+  .beneficios h3{ font-size:17px; }
+  .beneficios ul{ margin:14px 0 0; padding-left:20px; }
+  .beneficios li{ margin-top:9px; font-size:15px; }
+  .beneficios li::marker{ color:var(--green-deep); }
+  .beneficios-pie{ margin-top:16px; padding-top:14px; border-top:1px solid rgba(28,24,17,0.10); font-size:14.5px; color:var(--text-muted); }
+  .beneficios-pie a{ color:var(--green-deep); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+
+  /* ================= CLUBES Y EQUIPOS ================= */
+  .clubes{ padding:0 0 88px; }
+  .clubes .wrap{
+    background:var(--ink); color:var(--text-on-ink); border-radius:var(--radius-lg);
+    padding:34px 36px; display:flex; align-items:center; justify-content:space-between;
+    gap:28px; flex-wrap:wrap; max-width:1180px;
+  }
+  .clubes .eyebrow{ color:var(--green); }
+  .clubes h2{ margin-top:10px; font-size:clamp(21px,2.6vw,29px); color:var(--text-on-ink); }
+  .clubes p{ margin-top:12px; color:var(--text-on-ink-muted); font-size:15.5px; max-width:60ch; }
+  .clubes .btn{ flex:none; }
+  @media (max-width:760px){ .clubes .wrap{ padding:26px 22px; } .clubes .btn{ width:100%; } }
 
   /* ================= FINAL CTA ================= */
   .final-cta{ background:var(--blue-deep); color:#fff; padding:78px 0; text-align:center; }
@@ -461,7 +557,10 @@
   }
   .footer .wrap{ position:relative; z-index:1; }
   .footer-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:34px; padding-bottom:34px; border-bottom:1px solid rgba(244,239,228,0.12); }
-  .footer-brand img.fou{ width:190px; }
+  /* Pie: el wordmark con su bajada al costado, igual que la linea de UNSAM. */
+  .footer-brand .marca-line{ display:flex; align-items:center; gap:14px; }
+  .footer-brand img.fou{ width:104px; }
+  .footer-brand .marca-line span{ font-size:12.5px; max-width:22ch; line-height:1.4; }
   .footer-brand .unsam-line{ display:flex; align-items:center; gap:12px; margin-top:20px; }
   .footer-brand .unsam-line img{ height:30px; }
   .footer-brand .unsam-line span{ font-size:12.5px; max-width:22ch; }
@@ -503,14 +602,31 @@
   .chat-panel{
     position:fixed; right:22px; bottom:22px; z-index:90;
     width:370px; max-width:calc(100vw - 32px);
-    height:min(560px, calc(100vh - 44px));
+    height:min(640px, calc(100vh - 44px));
+    height:min(640px, calc(100dvh - 44px));
     background:var(--paper); border-radius:16px; overflow:hidden;
     box-shadow:0 26px 60px -18px rgba(0,0,0,0.55);
     display:none; flex-direction:column;
   }
   .chat-panel.abierto{ display:flex; }
-  @media (max-width:560px){
-    .chat-panel{ right:10px; left:10px; bottom:10px; width:auto; height:min(80vh, calc(100vh - 20px)); }
+  /* En celular el chat toma la pantalla completa: con el panel flotante la
+     barra del navegador le comia el pie y el boton Enviar quedaba cortado.
+     dvh mide el alto visible real, que cambia cuando aparece el teclado.
+     El corte va en 700px para que entren tambien los celulares grandes. */
+  @media (max-width:700px){
+    .chat-panel{
+      inset:0; right:0; left:0; top:0; bottom:0;
+      width:auto; max-width:none;
+      height:100vh; max-height:100vh;
+      height:100dvh; max-height:100dvh;
+      border-radius:0;
+    }
+    .chat-panel .chat-head{ padding-top:calc(15px + env(safe-area-inset-top, 0px)); }
+    .chat-panel .chat-chips{ padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px)); max-height:40dvh; }
+    /* El campo ocupa una fila y Enviar va abajo a lo ancho: aunque el visor
+       recorte el borde derecho, el boton se sigue viendo y se puede tocar. */
+    .chat-chips form input{ flex:1 1 100% !important; }
+    .chat-chips form button{ width:100%; }
   }
 
   .chat-head{
@@ -527,7 +643,7 @@
   }
   .chat-close:hover{ background:rgba(244,239,228,0.12); }
 
-  .chat-body{ flex:1; overflow-y:auto; padding:16px 16px 6px; display:flex; flex-direction:column; gap:10px; }
+  .chat-body{ position:relative; flex:1; overflow-y:auto; padding:16px 16px 6px; display:flex; flex-direction:column; gap:10px; }
   .msg{ max-width:86%; font-size:14px; line-height:1.5; border-radius:12px; padding:11px 13px; }
   .msg.bot{ background:var(--cream); color:var(--text); border-bottom-left-radius:4px; align-self:flex-start; }
   .msg.user{ background:var(--green); color:var(--ink); font-weight:600; border-bottom-right-radius:4px; align-self:flex-end; }
@@ -543,10 +659,17 @@
   @keyframes typing{ 0%,60%,100%{ opacity:.25; transform:translateY(0); } 30%{ opacity:1; transform:translateY(-3px); } }
   @media (prefers-reduced-motion: reduce){ .typing i{ animation:none; opacity:.5; } }
 
+  /* Las opciones ocupan como maximo una franja chica: si son muchas, se
+     scrollean ahi adentro y no le achican el espacio a la conversacion. */
   .chat-chips{
-    flex:none; padding:10px 16px 14px; border-top:1px solid rgba(28,24,17,0.09);
+    flex:none; padding:10px 16px 12px; border-top:1px solid rgba(28,24,17,0.09);
     display:flex; flex-wrap:wrap; gap:7px; background:var(--paper);
+    max-height:128px; overflow-y:auto;
   }
+
+  /* Bajadas a lo ancho: una o dos lineas en vez de un bloque angosto. */
+  .section-head:has(.p-ancho){ max-width:1100px; }
+  .section-head .p-ancho{ max-width:none; }
   .chip{
     font-family:'Montserrat',sans-serif; font-weight:600; font-size:12.5px;
     padding:8px 13px; border-radius:999px; cursor:pointer;
@@ -556,8 +679,19 @@
   .chip:hover{ border-color:var(--ink); }
   .chip:focus-visible{ outline:3px solid var(--blue); outline-offset:2px; }
   .chip.destacado{ background:var(--green); border-color:var(--green); font-weight:700; }
-  .chip.wa{ border-color:#25D366; display:flex; align-items:center; gap:6px; }
+  .chip.wa{ border-color:#25D366; display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
+  .chip.wa:hover{ background:#E9F9EF; border-color:#1EB455; }
+  /* El boton Enviar no se encoge nunca: en pantallas angostas quedaba cortado. */
+  .chat-chips form button{ flex:none; white-space:nowrap; }
+  .chat-chips .chip{ max-width:100%; }
 </style>
+</head>
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59CVWFCL"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ============================================================
      CONFIGURACIÓN — conexión con la Google Sheet
@@ -578,17 +712,17 @@
 <a class="ticker ticker--top" href="#inscripcion">
   <span class="ticker-track">
     <span class="ticker-group">
-      <span class="ticker-item"><span class="ticker-sep" aria-hidden="true"></span><span>Hay disponibles beneficios económicos por inscripción temprana. <b>¡Pre-inscribite!</b></span></span>
-      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>Hay disponibles beneficios económicos por inscripción temprana. <b>¡Pre-inscribite!</b></span></span>
-      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>Hay disponibles beneficios económicos por inscripción temprana. <b>¡Pre-inscribite!</b></span></span>
-      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>Hay disponibles beneficios económicos por inscripción temprana. <b>¡Pre-inscribite!</b></span></span>
+      <span class="ticker-item"><span class="ticker-sep" aria-hidden="true"></span><span>10% off si te inscribís antes del 12/10 · <b>¡Reservá tu lugar hoy!</b></span></span>
+      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>10% off si te inscribís antes del 12/10 · <b>¡Reservá tu lugar hoy!</b></span></span>
+      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>10% off si te inscribís antes del 12/10 · <b>¡Reservá tu lugar hoy!</b></span></span>
+      <span class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>10% off si te inscribís antes del 12/10 · <b>¡Reservá tu lugar hoy!</b></span></span>
     </span>
   </span>
 </a>
 
 <header class="nav">
   <div class="wrap">
-    <a href="#top" class="lockup" aria-label="FOU × UNSAM — inicio">
+    <a href="#top" class="lockup" aria-label="FOU y UNSAM — inicio">
       <img class="fou" src="__LOGO_NEGRO_MARCA__" alt="FOU">
       <span class="x" aria-hidden="true"></span>
       <img class="unsam" src="__UNSAM__" alt="Política y Gobierno UNSAM">
@@ -599,7 +733,7 @@
       <a href="#info">Info básica</a>
       <a href="#inversion">Valores</a>
     </nav>
-    <a href="#inscripcion" class="btn btn-primary btn-sm">¡Quiero pre-inscribirme!</a>
+    <a href="#inscripcion" class="btn btn-primary btn-sm">¡Inscribite!</a>
   </div>
 </header>
 
@@ -609,14 +743,26 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">Formación de excelencia para profesionales del deporte y la salud</span>
+        <span class="eyebrow">Capacitación para profesionales del deporte y la salud</span>
         <h1>Capacitate con <em>los mejores</em> del deporte argentino</h1>
+
+        <div class="hero-temas">
+          <span class="hero-temas-label">Jornadas individuales en</span>
+          <ul class="hero-temas-list">
+            <li><a href="#jornadas">Kinesiología <b>31/10</b></a></li>
+            <li><a href="#jornadas">Psicología <b>14/11</b></a></li>
+            <li><a href="#jornadas">Nutrición <b>21/11</b></a></li>
+            <li><a href="#jornadas">Gestión de equipos <b>2027</b></a></li>
+            <li><a href="#jornadas">Preparación física <b>2027</b></a></li>
+          </ul>
+        </div>
         <p class="hero-sub">
           El centro de entrenamiento y medicina deportiva FOU, en alianza con la Diplomatura
-          en Política y Gestión Deportiva de la UNSAM, lanzan 5 jornadas de formación
+          en Política y Gestión Deportiva de la UNSAM, lanzan jornadas de formación
           profesional en modalidad presencial para quienes buscan actualizarse con referentes
-          del alto rendimiento. Cada jornada es independiente, tiene su propio certificado
-          oficial y podés anotarte en una o en varias.
+          del alto rendimiento. Cada jornada se cursa de forma independiente y tiene su propio
+          certificado oficial: anotarte a una no te obliga a hacer las demás.
+          <b style="color:var(--text-on-ink)">¡Anotate a la que te interesa!</b>
         </p>
 
         <div class="hero-badges">
@@ -627,21 +773,21 @@
         </div>
 
         <div class="hero-ctas">
-          <a href="#inscripcion" class="btn btn-primary">¡Quiero pre-inscribirme!</a>
+          <a href="#inscripcion" class="btn btn-primary">¡Quiero inscribirme!</a>
           <button type="button" data-abrir-chat class="btn btn-ghost-light">¡Sacate las dudas acá!</button>
         </div>
 
         <div class="stat-row">
-          <div class="stat"><b>5</b><span>jornadas independientes</span></div>
+          <div class="stat"><b>5</b><span>jornadas independientes: elegís cuál hacer</span></div>
           <div class="stat"><b>11</b><span>referentes del alto rendimiento</span></div>
           <div class="stat"><b>1</b><span>certificado oficial por jornada</span></div>
         </div>
       </div>
 
       <div class="form-card" id="inscripcion">
-        <span class="eyebrow" style="color:var(--blue-deep)">Sin costo</span>
-        <h3>Pre-inscribite</h3>
-        <p class="form-sub">Tu inscripción solo se confirma haciendo el pago de la jornada. Dejanos tus datos y te contactamos por WhatsApp o mail con toda la info de cupos y pago.</p>
+        <span class="eyebrow" style="color:var(--blue-deep)">Pre-inscripción</span>
+        <h3>Reservá tu lugar</h3>
+        <p class="form-sub">Dejanos tus datos y <b>te enviamos por mail o WhatsApp la información para pagar</b>. La reserva del lugar <b>solo se confirma con el pago y el envío del comprobante</b>.</p>
 
         <form id="preinscripcion-form" novalidate>
           <div class="field-row">
@@ -654,9 +800,12 @@
               <input type="text" id="f-apellido" name="apellido" autocomplete="family-name" required>
             </div>
           </div>
+          <p class="field-error" id="nombre-error">Necesitamos tu nombre y tu apellido.</p>
           <div class="field">
             <label for="f-email">Mail</label>
-            <input type="email" id="f-email" name="email" autocomplete="email" required>
+            <input type="email" id="f-email" name="email" autocomplete="email" required
+                   aria-describedby="email-error">
+            <p class="field-error" id="email-error">Necesitamos un mail válido para enviarte la información.</p>
           </div>
           <div class="field">
             <label for="f-telefono">Teléfono</label>
@@ -670,27 +819,27 @@
             <p class="field-error" id="tel-error">Revisá el número: tienen que ser 10 dígitos, por ejemplo 11 2345 6789.</p>
           </div>
           <div class="field">
-            <label for="f-jornada">Jornada a la que querés anotarte</label>
+            <label for="f-jornada">¿Qué jornada te interesa?</label>
             <select id="f-jornada" name="jornada" required>
               <option value="" disabled selected>Elegí una opción</option>
-              <option value="Jornada de Kinesiología Deportiva (24/10/2026)">Kinesiología deportiva — 24 de octubre</option>
-              <option value="Jornada de Nutrición Deportiva (31/10/2026)">Nutrición deportiva — 31 de octubre</option>
-              <option value="Jornada de Psicología Deportiva (14/11/2026)">Psicología deportiva — 14 de noviembre</option>
-              <option value="Jornada de Gestión de Equipos (2027)">Gestión de equipos — 2027</option>
-              <option value="Jornada de Preparación Física (2027)">Preparación física — 2027</option>
-              <option value="Quiero información de todas las jornadas">Quiero información de todas las jornadas</option>
+              <option value="Kinesiología Deportiva (31/10)">Kinesiología Deportiva (31/10)</option>
+              <option value="Psicología Deportiva (14/11)">Psicología Deportiva (14/11)</option>
+              <option value="Nutrición Deportiva (21/11)">Nutrición Deportiva (21/11)</option>
+              <option value="Gestión de Equipos (2027)">Gestión de Equipos (2027)</option>
+              <option value="Preparación Física (2027)">Preparación Física (2027)</option>
             </select>
+            <p class="field-error" id="jornada-error">Elegí la jornada que te interesa.</p>
           </div>
           <div class="form-submit">
-            <button type="submit" class="btn btn-primary btn-block">Enviar pre-inscripción</button>
+            <button type="submit" class="btn btn-primary btn-block">¡Quiero inscribirme!</button>
           </div>
-          <p class="form-fineprint">Al enviar tus datos aceptás que FOU te contacte por WhatsApp o mail para coordinar tu inscripción. No compartimos tu información con terceros.</p>
+          <p class="form-fineprint">La pre-inscripción no tiene costo ni te compromete: el lugar queda reservado recién con el pago y el comprobante. Al enviar tus datos aceptás que FOU te contacte por WhatsApp o mail. No compartimos tu información con terceros.</p>
         </form>
 
         <div class="form-success" id="form-success">
           <svg width="46" height="46" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#E4F7C3"/><path d="m8 12.5 2.5 2.5L16 9.5" stroke="#6EA71F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h4>¡Listo, ya te pre-inscribimos!</h4>
-          <p>En breve te contactamos por WhatsApp o mail con la información de cupos y pago.</p>
+          <h4>¡Listo, ya estás pre-inscripto!</h4>
+          <p>En breve te escribimos por WhatsApp o mail con la información para pagar. Tu lugar se confirma con el pago y el comprobante.</p>
         </div>
       </div>
     </div>
@@ -700,9 +849,9 @@
   <section class="ticker">
     <div class="ticker-track" id="ticker-track">
       <div class="ticker-group">
-        <div class="ticker-item"><span class="ticker-sep" aria-hidden="true"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Formate con quienes lo forjaron</b> para entenderlo y llevarlo a tu profesión.</span></div>
-        <div class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Formate con quienes lo forjaron</b> para entenderlo y llevarlo a tu profesión.</span></div>
-        <div class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Formate con quienes lo forjaron</b> para entenderlo y llevarlo a tu profesión.</span></div>
+        <div class="ticker-item"><span class="ticker-sep" aria-hidden="true"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Aprendé de nuestros mejores profesionales</b> y llevalo a tu realidad.</span></div>
+        <div class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Aprendé de nuestros mejores profesionales</b> y llevalo a tu realidad.</span></div>
+        <div class="ticker-item" aria-hidden="true"><span class="ticker-sep"></span><span>El deporte argentino es un ejemplo a nivel mundial por su trabajo en equipo. <b>Aprendé de nuestros mejores profesionales</b> y llevalo a tu realidad.</span></div>
       </div>
     </div>
   </section>
@@ -713,7 +862,7 @@
       <div class="section-head ancho reveal">
         <span class="eyebrow">Los profesionales que nos dan orgullo en el deporte argentino</span>
         <h2>Ellos están detrás del rendimiento de nuestros deportistas</h2>
-        <p>Cada jornada tiene su eje, sus disertantes y su certificado. Entrá a cada una para ver el detalle y anotarte.</p>
+        <p class="p-ancho">Cada jornada se cursa por separado, con sus disertantes y su certificado. <b>¡Anotate a la que te interesa!</b></p>
       </div>
 
       <div class="cards-grid reveal" id="cards-grid"></div>
@@ -732,7 +881,7 @@
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--green-pale)"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6EA71F" stroke-width="2"/><path d="M8 3v4M16 3v4M3 10h18" stroke="#6EA71F" stroke-width="2" stroke-linecap="round"/></svg></div>
           <h4>Duración</h4>
-          <div class="value">5 jornadas<small>3 en 2026 y 2 en 2027</small></div>
+          <div class="value">Según la jornada<small>Kinesiología y nutrición: de 9 a 18 h · Psicología: de 9 a 13 h</small></div>
         </div>
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--blue-pale)"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z" stroke="#1F4E85" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5" stroke="#1F4E85" stroke-width="2"/></svg></div>
@@ -742,7 +891,7 @@
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--green-pale)"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6EA71F" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="#6EA71F" stroke-width="2" stroke-linecap="round"/></svg></div>
           <h4>Modalidad</h4>
-          <div class="value">Presencial<small>Horario confirmado por jornada</small></div>
+          <div class="value">Presencial<small>Cada jornada se cursa por separado</small></div>
         </div>
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--blue-pale)"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-4Z" stroke="#1F4E85" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="#1F4E85" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -752,7 +901,7 @@
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--green-pale)"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#6EA71F" stroke-width="2"/><path d="M3 10h18M8 15h3" stroke="#6EA71F" stroke-width="2" stroke-linecap="round"/></svg></div>
           <h4>Fechas 2026</h4>
-          <div class="value">24/10 · 31/10 · 14/11<small>Kinesiología, nutrición y psicología</small></div>
+          <div class="value">31/10 · 14/11 · 21/11<small>Kinesiología, psicología y nutrición</small></div>
         </div>
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--blue-pale)"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="#1F4E85" stroke-width="2"/><path d="M2.5 20c0-3.6 3-5.8 6.5-5.8s6.5 2.2 6.5 5.8" stroke="#1F4E85" stroke-width="2" stroke-linecap="round"/><circle cx="17.5" cy="9" r="2.5" stroke="#1F4E85" stroke-width="2"/><path d="M15.8 14.5c2.6.3 4.7 2.2 4.7 5.5" stroke="#1F4E85" stroke-width="2" stroke-linecap="round"/></svg></div>
@@ -762,12 +911,12 @@
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--green-pale)"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4v16h16" stroke="#6EA71F" stroke-width="2" stroke-linecap="round"/><path d="M8 15v-4M13 15V7M18 15v-7" stroke="#6EA71F" stroke-width="2" stroke-linecap="round"/></svg></div>
           <h4>Inscripción</h4>
-          <div class="value">Por jornada<small>Cada una con su valor individual</small></div>
+          <div class="value">Elegís la que querés<small>Cada jornada se cursa y se paga por separado</small></div>
         </div>
         <div class="info-tile">
           <div class="icon-badge" style="background:var(--blue-pale)"><svg viewBox="0 0 24 24" fill="none"><path d="M21 15.5a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10.5Z" stroke="#1F4E85" stroke-width="2" stroke-linejoin="round"/></svg></div>
-          <h4>Consultas</h4>
-          <div class="value">11 6893-0497<small>Te respondemos por WhatsApp</small></div>
+          <h4>¿Dudas?</h4>
+          <div class="value"><a id="wa-info" href="#" target="_blank" rel="noopener" style="color:var(--blue-deep); text-decoration:underline; text-underline-offset:3px;">Escribinos por WhatsApp</a><small>Te respondemos en el día</small></div>
         </div>
       </div>
     </div>
@@ -777,11 +926,11 @@
   <section class="statement reveal">
     <div class="wrap">
       <span class="eyebrow">Por qué participar</span>
-      <h2>En estas capacitaciones vas a aprender el método y la forma de trabajo de quienes
+      <h2>En cada una de estas capacitaciones vas a aprender el método y la forma de trabajo de quienes
         lograron convertirse en <mark>los mejores del mundo</mark> en su profesión.</h2>
       <p class="lede">Además, ellos van a estar acompañados por sus equipos de profesionales. En cada jornada vas a llevarte herramientas para aplicar en tu cotidianeidad.</p>
       <div class="statement-ctas">
-        <a href="#inscripcion" class="btn btn-primary">¡Quiero pre-inscribirme!</a>
+        <a href="#inscripcion" class="btn btn-primary">¡Quiero inscribirme!</a>
         <button type="button" data-abrir-chat class="btn btn-ghost-light">¡Sacate las dudas acá!</button>
       </div>
     </div>
@@ -793,44 +942,68 @@
       <div class="section-head reveal">
         <span class="eyebrow">Valores</span>
         <h2>Así es la inversión</h2>
-        <p>Te lo contamos ahora para que planifiques. El pago se coordina después de tu pre-inscripción, por WhatsApp o mail.</p>
+        <p class="p-ancho">Cada capacitación se paga por separado y tiene su propio valor. Pre-inscribite y te enviamos toda la info por mail o WhatsApp para coordinar el pago: el lugar se reserva con el pago y el envío del comprobante.</p>
       </div>
 
       <div class="pricing-grid reveal">
         <div class="price-card">
-          <span class="price-tag">1 jornada</span>
-          <div class="price-amount">$150.000</div>
-          <div class="price-save">&nbsp;</div>
+          <span class="price-tag">Kinesiología · 31/10</span>
+          <div class="price-amount">$160.000</div>
+          <div class="price-save">De 9 a 18 h</div>
           <ul class="price-list">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Elegís la jornada que más te sirve</li>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Certificado oficial UNSAM</li>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Cupo presencial garantizado</li>
           </ul>
+          <a class="btn btn-primary btn-sm price-cta" href="#inscripcion" data-jornada="Kinesiología Deportiva (31/10)">¡Quiero inscribirme!</a>
         </div>
         <div class="price-card featured">
-          <span class="price-featured-pill">20% off</span>
-          <span class="price-tag">2 jornadas</span>
-          <div class="price-amount">$240.000</div>
-          <div class="price-save">Ahorrás $60.000</div>
+          <span class="price-tag">Psicología · 14/11</span>
+          <div class="price-amount">$90.000</div>
+          <div class="price-save">De 9 a 13 h</div>
           <ul class="price-list">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Combinás los ejes que más te interesan</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Un certificado oficial por cada una</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Certificado oficial UNSAM</li>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Cupo presencial garantizado</li>
           </ul>
+          <a class="btn btn-primary btn-sm price-cta" href="#inscripcion" data-jornada="Psicología Deportiva (14/11)">¡Quiero inscribirme!</a>
         </div>
         <div class="price-card">
-          <span class="price-tag">3 jornadas</span>
-          <div class="price-amount">$315.000</div>
-          <div class="price-save">Ahorrás $135.000</div>
+          <span class="price-tag">Nutrición · 21/11</span>
+          <div class="price-amount">$160.000</div>
+          <div class="price-save">De 9 a 18 h</div>
           <ul class="price-list">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>El mejor precio por jornada</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Un certificado oficial por cada una</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Certificado oficial UNSAM</li>
             <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5L20 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Cupo presencial garantizado</li>
           </ul>
+          <a class="btn btn-primary btn-sm price-cta" href="#inscripcion" data-jornada="Nutrición Deportiva (21/11)">¡Quiero inscribirme!</a>
         </div>
       </div>
 
-      <p class="pricing-note reveal">Los descuentos se calculan sobre el total combinando las jornadas que elijas, sin importar si son consecutivas. La forma de pago te la contamos por WhatsApp o mail después de tu pre-inscripción.</p>
+      <div class="beneficios reveal">
+        <h3>Beneficios económicos</h3>
+        <ul>
+          <li><b>10% off</b> si te inscribís antes del <b>12/10</b></li>
+          <li><b>5% off</b> pagando por transferencia, acumulable solo con el de inscripción temprana</li>
+          <li>Si sos <b>deportista de FOU</b> o <b>alumno o egresado de la Diplomatura en Gestión Deportiva de la UNSAM</b>: <b>20% off</b> (no acumulable con los otros beneficios)</li>
+        </ul>
+        <p class="beneficios-pie">¿Querés reservar tu vacante? <a href="#inscripcion">Completá el formulario de pre-inscripción.</a></p>
+      </div>
+
+      <p class="pricing-note reveal">Las capacitaciones son independientes: podés hacer solo una sin ningún compromiso con las demás. Los valores de gestión de equipos y preparación física se confirman junto con las fechas de 2027.</p>
+    </div>
+  </section>
+
+  <!-- ================= CLUBES Y EQUIPOS ================= -->
+  <section class="clubes reveal">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Clubes y equipos</span>
+        <h2>¿Querés formar a todo tu cuerpo técnico?</h2>
+        <p>Si tenés un club o coordinás equipos deportivos y querés que tus profesionales se formen en estas capacitaciones, escribinos y armamos una propuesta para el grupo.</p>
+      </div>
+      <a id="wa-clubes" href="#" target="_blank" rel="noopener" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#111111" aria-hidden="true"><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 12.05 0Z"/></svg>
+        Escribinos por WhatsApp
+      </a>
     </div>
   </section>
 
@@ -838,9 +1011,9 @@
   <section class="final-cta reveal">
     <div class="wrap">
       <h2>¿Lista o listo para capacitarte con los mejores?</h2>
-      <p>Pre-inscribite sin costo y te contactamos con toda la información de cupos y pago.</p>
+      <p>Elegí la jornada que te interesa y pre-inscribite: te llega por mail o WhatsApp la información para pagar y reservar tu lugar.</p>
       <div class="final-cta-ctas">
-        <a href="#inscripcion" class="btn btn-primary">¡Quiero pre-inscribirme!</a>
+        <a href="#inscripcion" class="btn btn-primary">¡Quiero reservar mi lugar!</a>
         <button type="button" data-abrir-chat class="btn btn-white"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z" stroke="#1F4E85" stroke-width="2" stroke-linejoin="round"/><path d="M8 9h8M8 13h5" stroke="#1F4E85" stroke-width="2" stroke-linecap="round"/></svg>¡Sacate las dudas acá!</button>
       </div>
     </div>
@@ -852,7 +1025,10 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <img class="fou" src="__LOGO_BLANCO__" alt="FOU — Centro de entrenamiento y medicina deportiva">
+        <div class="marca-line">
+          <img class="fou" src="__LOGO_VERDE__" alt="FOU">
+          <span>Centro de entrenamiento y medicina deportiva</span>
+        </div>
         <div class="unsam-line">
           <img src="__UNSAM_BLANCO__" alt="Política y Gobierno UNSAM">
           <span>Diplomatura en Política y Gestión Deportiva</span>
@@ -862,13 +1038,12 @@
         <div class="footer-col">
           <h5>Jornadas 2026–2027</h5>
           <a href="#inscripcion">Pre-inscripción</a>
-          <a href="#jornadas">Las 5 jornadas</a>
-          <a href="#inversion">Inversión</a>
+          <a href="#jornadas">Las jornadas</a>
+          <a href="#inversion">Valores</a>
         </div>
         <div class="footer-col">
           <h5>Contacto</h5>
           <a id="wa-footer" href="#" target="_blank" rel="noopener">WhatsApp 11 6893-0497</a>
-          <a href="mailto:fou.contacto@gmail.com">fou.contacto@gmail.com</a>
           <a href="https://instagram.com/fou.arg" target="_blank" rel="noopener">@fou.arg</a>
         </div>
         <div class="footer-col">
@@ -916,19 +1091,26 @@
     </button>
     <span class="eyebrow" id="modal-eyebrow"></span>
     <h3 id="modal-title"></h3>
+    <p class="modal-bajada" id="modal-bajada"></p>
     <div class="modal-facts">
       <div class="modal-fact"><span>Fecha</span><b id="modal-fecha"></b></div>
+      <div class="modal-fact"><span>Duración</span><b id="modal-duracion"></b></div>
       <div class="modal-fact"><span>Sede</span><b id="modal-sede"></b></div>
       <div class="modal-fact"><span>Certificado</span><b id="modal-cert"></b></div>
     </div>
+    <p class="modal-indep">Esta jornada se cursa de forma independiente: anotarte no te compromete con las demás.</p>
     <div class="modal-section-label">Quiénes la dictan</div>
     <div class="modal-people" id="modal-people"></div>
     <div class="modal-syllabus">
       <div class="modal-section-label">Qué se trabaja en la jornada</div>
       <ul id="modal-temario"></ul>
     </div>
+    <div class="modal-publico" id="modal-publico-wrap">
+      <div class="modal-section-label">Pensada para</div>
+      <p id="modal-publico"></p>
+    </div>
     <div class="modal-cta">
-      <button class="btn btn-primary btn-block" id="modal-inscribirme">Quiero inscribirme</button>
+      <button class="btn btn-primary btn-block" id="modal-inscribirme">¡Quiero inscribirme a esta jornada!</button>
     </div>
   </div>
 </div>
@@ -939,16 +1121,31 @@
 
   /* ===== WhatsApp (queda como salida humana en el footer y dentro del chat) ===== */
   var WHATSAPP_NUMBER = "5491168930497";
-  var WHATSAPP_MSG = "Hola! Quiero hacer una consulta sobre las jornadas de formacion FOU x UNSAM.";
+  var WHATSAPP_MSG = "Hola! Quiero hacer una consulta sobre las jornadas de formacion de FOU y UNSAM.";
   var waLink = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(WHATSAPP_MSG);
-  var waFooter = document.getElementById("wa-footer");
-  if (waFooter) waFooter.href = waLink;
+  ["wa-footer", "wa-info"].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.href = waLink;
+  });
+
+  // Clubes y equipos: el mensaje ya llega escrito para esa conversacion.
+  var waClubes = document.getElementById("wa-clubes");
+  if (waClubes) {
+    waClubes.href = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" +
+      encodeURIComponent("Hola! Coordino un club / equipo deportivo y quiero que nuestros profesionales se formen en las capacitaciones de FOU y UNSAM. Me pasan una propuesta para el grupo?");
+  }
 
   /* ===== Destino del formulario =====
      URL del Apps Script publicado como aplicacion web (termina en /exec).
      El script escribe la fila en la Sheet "Jornadas de capacitacion Fou".
      Ver apps-script.gs. */
-  var SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbxinvQ8h7R3Wh3-VUCaPfhWI0-VY32qZmEQL878WblEyttd_HqEGlO9jj2WATNSSPQLOA/exec";
+  var SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbxSuaUkdnadXZQPwgbgms4QMM2keh62XC9Pg6ElolIwqz0pptPwN_w51nZsmflmsTy5/exec";
+
+  /* ===== Pagina de gracias =====
+     Al enviar el formulario la persona va a capacitaciones.fou.com.ar/gracias-registro
+     (la genera build.ps1 en gracias-registro/index.html). Si se deja vacio,
+     o si la redireccion falla, se muestra la confirmacion dentro de la tarjeta. */
+  var GRACIAS_URL = "/gracias-registro";
 
   /* ===== Cinta =====
      El grupo ya viene en el HTML; se clona una vez para que la animacion
@@ -960,84 +1157,114 @@
   });
 
   /* ===== Jornadas =====
-     Nombres y cargos: reales. Los temarios son provisorios. */
+     Fechas y horarios: planilla "Fecha y horarios". Temarios: PDF y documentos
+     oficiales de FOU. Perfiles: documento "Resumen perfiles de los disertantes". */
   var jornadas = [
     {
-      fecha: "24 de octubre de 2026",
-      fechaCorta: "Sábado 24 de octubre",
-      selectValue: "Jornada de Kinesiología Deportiva (24/10/2026)",
-      topic: "Kinesiología deportiva",
-      people: [
-        { nombre:"Luís García",     rol:"Kinesiólogo Selección Argentina de fútbol", corto:"Kinesiólogo Selección Argentina", foto:"__FOTO_luis-garcia__" },
-        { nombre:"Pablo Capucheti", rol:"Kinesiólogo Selección Argentina de fútbol", corto:"Kinesiólogo Selección Argentina", foto:"__FOTO_pablo-capucheti__" },
-        { nombre:"Pablo Varela",    rol:"Kinesiólogo de fútbol profesional, Boca Juniors", corto:"Kinesiólogo de Boca Juniors", foto:"__FOTO_pablo-varela__" }
-      ],
-      temario: [
-        "Evaluación funcional y prevención de lesiones en el deporte profesional",
-        "Protocolos de recuperación usados en selecciones nacionales",
-        "Trabajo del kinesiólogo dentro del cuerpo técnico"
-      ]
-    },
-    {
-      fecha: "31 de octubre de 2026",
+      fecha: "Sábado 31 de octubre de 2026",
       fechaCorta: "Sábado 31 de octubre",
-      selectValue: "Jornada de Nutrición Deportiva (31/10/2026)",
-      topic: "Nutrición deportiva",
+      duracion: "De 9 a 18 h",
+      selectValue: "Kinesiología Deportiva (31/10)",
+      topic: "Kinesiología deportiva",
+      titulo: "Tratamiento y readaptación funcional de lesiones deportivas",
+      bajada: "La importancia de los kinesiólogos en el deporte amateur y el alto rendimiento",
       people: [
-        { nombre:"Luciano Spena",  rol:"Nutricionista Selección Argentina de fútbol", corto:"Nutricionista Selección Argentina", foto:"__FOTO_luciano-spena__" },
-        { nombre:"Fernando Luna",  rol:"Licenciado en Nutrición Deportiva", corto:"Lic. en Nutrición Deportiva", foto:"__FOTO_fernando-luna__" },
-        { nombre:"Eugenio Rossi",  rol:"Médico especialista en Nutrición", corto:"Médico especialista en Nutrición", foto:"__FOTO_eugenio-rossi__" }
+        { nombre:"Luis García",       rol:"Kinesiólogo Selección Argentina de fútbol", corto:"Kinesiólogo Selección Argentina", foto:"__FOTO_luis-garcia__" },
+        { nombre:"Pablo Capuchetti",  rol:"Kinesiólogo Selección Argentina de fútbol", corto:"Kinesiólogo Selección Argentina", foto:"__FOTO_pablo-capucheti__" },
+        { nombre:"Pablo Varela",      rol:"Kinesiólogo de fútbol profesional, Boca Juniors", corto:"Kinesiólogo de Boca Juniors", foto:"__FOTO_pablo-varela__" }
       ],
       temario: [
-        "Estrategias de carga y recuperación nutricional en competencia",
-        "Suplementación deportiva: qué dice la evidencia",
-        "Planificación alimentaria con deportistas de elite"
-      ]
+        "La readaptación a la actividad física como eje del proceso de rehabilitación deportiva",
+        "Volumen, intensidad y direccionalidad de las lesiones musculares",
+        "Volumen, intensidad y direccionalidad de las lesiones por sobrecarga mecánica",
+        "Volumen, intensidad y direccionalidad de las lesiones articulares",
+        "El análisis del movimiento: protocolo para el estudio de la huella motriz",
+        "GPS: control de evolución y retorno deportivo"
+      ],
+      publico: ["Kinesiólogos", "Estudiantes de medicina", "Médicos deportólogos", "Personas interesadas en la disciplina"]
     },
     {
-      fecha: "14 de noviembre de 2026",
+      fecha: "Sábado 14 de noviembre de 2026",
       fechaCorta: "Sábado 14 de noviembre",
-      selectValue: "Jornada de Psicología Deportiva (14/11/2026)",
+      duracion: "De 9 a 13 h",
+      selectValue: "Psicología Deportiva (14/11)",
       topic: "Psicología deportiva",
+      titulo: "El valor de equivocarse: la gestión del error y el circuito emocional del deportista",
+      bajada: "",
       people: [
         { nombre:"Gustavo Ruiz",    rol:"Psicólogo deportivo de Franco Colapinto", corto:"Psicólogo de Franco Colapinto", foto:"__FOTO_gustavo-ruiz__" },
         { nombre:"Luciana Ortiz",   rol:"Psicóloga clínica y deportiva", corto:"Psicóloga clínica y deportiva", foto:"__FOTO_luciana-ortiz__" },
         { nombre:"Lisandro Aisa",   rol:"Psicólogo deportivo", corto:"Psicólogo deportivo", foto:"__FOTO_lisandro-aisa__" }
       ],
       temario: [
-        "Manejo de la presión y la frustración en instancias decisivas",
-        "Acompañamiento psicológico en deportes individuales y de equipo",
-        "El rol del psicólogo dentro de un cuerpo técnico"
-      ]
+        "Proceso de aprendizaje deportivo: desde la cantidad hacia la calidad",
+        "Entrenar para perder (y aprender): cómo lo que pensás y sentís moldea tu conducta deportiva",
+        "Gestión emocional a través de herramientas psicológicas"
+      ],
+      publico: ["Psicólogos", "Estudiantes de psicología", "Quienes acompañan la preparación mental de deportistas", "Personas interesadas en la disciplina"]
+    },
+    {
+      fecha: "Sábado 21 de noviembre de 2026",
+      fechaCorta: "Sábado 21 de noviembre",
+      duracion: "De 9 a 18 h",
+      selectValue: "Nutrición Deportiva (21/11)",
+      topic: "Nutrición deportiva",
+      titulo: "Nutrición deportiva en el deporte amateur y el alto rendimiento",
+      bajada: "",
+      people: [
+        { nombre:"Luciano Spena",         rol:"Nutricionista Selección Argentina de fútbol", corto:"Nutricionista Selección Argentina", foto:"__FOTO_luciano-spena__" },
+        { nombre:"Fernando Luna",         rol:"Licenciado en Nutrición Deportiva", corto:"Lic. en Nutrición Deportiva", foto:"__FOTO_fernando-luna__" },
+        { nombre:"Eugenio Viviani Rossi", rol:"Médico especialista en Nutrición", corto:"Médico especialista en Nutrición", foto:"__FOTO_eugenio-rossi__" }
+      ],
+      temario: [
+        "Composición corporal en el deporte de élite",
+        "Cronobiología aplicada al deportista de alto rendimiento",
+        "Buffers en el deporte",
+        "Análisis crítico de la suplementación con magnesio, colágeno y creatina",
+        "Recuperación nutricional basada en métricas",
+        "Perfil bioquímico en atletas"
+      ],
+      publico: ["Nutricionistas", "Estudiantes de nutrición", "Estudiantes de medicina", "Médicos deportólogos", "Personas interesadas en la disciplina"]
     },
     {
       fecha: "2027 · fecha a confirmar",
-      fechaCorta: "2027",
-      selectValue: "Jornada de Gestión de Equipos (2027)",
+      fechaCorta: "2027 · fecha y horario a confirmar",
+      duracion: "A confirmar",
+      selectValue: "Gestión de Equipos (2027)",
       topic: "Gestión de equipos",
+      titulo: "",
+      bajada: "",
       people: [
         { nombre:"Julio Lamas", rol:"Ex entrenador Selección Argentina de básquet · referente del deporte argentino", corto:"Ex entrenador Selección Argentina de básquet", foto:"__FOTO_julio-lamas__" }
       ],
       temario: [
-        "Cómo se construye y se sostiene un equipo campeón",
-        "Liderazgo y toma de decisiones en alta competencia",
-        "La conducción del cuerpo técnico"
-      ]
+        "Liderazgo",
+        "Comunicación",
+        "Organización de roles en los equipos de trabajo",
+        "Resolución de conflictos",
+        "Los vínculos en el alto rendimiento"
+      ],
+      publico: ["Entrenadores", "Dirigentes", "Quienes conducen equipos", "Personas interesadas en la disciplina"]
     },
     {
       fecha: "2027 · fecha a confirmar",
-      fechaCorta: "2027",
-      selectValue: "Jornada de Preparación Física (2027)",
+      fechaCorta: "2027 · fecha y horario a confirmar",
+      duracion: "A confirmar",
+      selectValue: "Preparación Física (2027)",
       topic: "Preparación física",
+      titulo: "",
+      bajada: "",
       people: [
         { nombre:"Horacio Anselmi", rol:"Licenciado en alto rendimiento deportivo · referente del deporte argentino", corto:"Lic. en alto rendimiento deportivo", foto:"__FOTO_horacio-anselmi__" },
-        { nombre:"Esteban Pizzi",   rol:"Preparador físico Selección Argentina de futsal masculino y fútbol femenino Sub20 y Sub17", corto:"Preparador físico Selección Argentina de futsal", foto:"__FOTO_esteban-pizzi__" }
+        { nombre:"Esteban Pizzi",   rol:"Preparador físico Selección Argentina de futsal masculino y fútbol femenino Sub 20", corto:"Preparador físico de selecciones de AFA", foto:"__FOTO_esteban-pizzi__" }
       ],
       temario: [
-        "Planificación de la carga física a lo largo de una temporada",
-        "Readaptación al esfuerzo después de una lesión",
-        "Evaluación y monitoreo del rendimiento"
-      ]
+        "Desarrollo físico de los deportistas",
+        "Rol del preparador físico en el deporte amateur y el alto rendimiento",
+        "Progresión de contenidos de acuerdo a las etapas de desarrollo",
+        "La importancia de los gestos técnicos en los trabajos de fuerza y potencia"
+      ],
+      publico: ["Preparadores físicos", "Entrenadores", "Profesionales que planifican cargas de entrenamiento", "Personas interesadas en la disciplina"]
     }
   ];
 
@@ -1065,7 +1292,7 @@
     card.innerHTML =
       '<div class="jcard-photos">' + j.people.map(frameHtml).join("") + '</div>' +
       '<div class="jcard-body">' +
-        '<div class="jcard-date">' + j.fechaCorta + '</div>' +
+        '<div class="jcard-date">' + j.fechaCorta + (j.duracion !== "A confirmar" ? ' · ' + j.duracion.split(" · ")[0] : '') + '</div>' +
         '<h3 class="jcard-topic">' + j.topic + '</h3>' +
         '<div class="jcard-lead">' +
           '<div class="name">' + lead.nombre + '</div>' +
@@ -1086,10 +1313,14 @@
 
   function openModal(j){
     document.getElementById("modal-eyebrow").textContent = "Jornada de " + j.topic;
-    document.getElementById("modal-title").textContent = j.topic;
+    document.getElementById("modal-title").textContent = j.titulo || j.topic;
+    document.getElementById("modal-bajada").textContent = j.bajada ? "“" + j.bajada + "”" : "";
     document.getElementById("modal-fecha").textContent = j.fecha;
+    document.getElementById("modal-duracion").textContent = j.duracion;
     document.getElementById("modal-sede").textContent = SEDE;
     document.getElementById("modal-cert").textContent = "Oficial UNSAM";
+    document.getElementById("modal-publico-wrap").style.display = j.publico.length ? "" : "none";
+    document.getElementById("modal-publico").textContent = j.publico.join(" · ");
 
     document.getElementById("modal-people").innerHTML = j.people.map(function(p, i){
       return '<div class="person' + (i === 0 ? ' lead' : '') + '">' + frameHtml(p, i) +
@@ -1132,6 +1363,15 @@
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && overlay.classList.contains("open")) closeModal(); });
 
   /* ===== Envío del formulario ===== */
+
+  /* Los botones de las tarjetas de valores dejan la jornada ya elegida en el
+     formulario, asi la persona no la vuelve a buscar en la lista. */
+  document.querySelectorAll("[data-jornada]").forEach(function(a){
+    a.addEventListener("click", function(){
+      var sel = document.getElementById("f-jornada");
+      if (sel) sel.value = a.getAttribute("data-jornada");
+    });
+  });
   var form = document.getElementById("preinscripcion-form");
   var successBox = document.getElementById("form-success");
 
@@ -1164,6 +1404,27 @@
   form.addEventListener("submit", function(e){
     e.preventDefault();
 
+    // Nombre y apellido, obligatorios: es con lo que despues se contacta.
+    var nombreInput = document.getElementById("f-nombre");
+    var apellidoInput = document.getElementById("f-apellido");
+    var nombreError = document.getElementById("nombre-error");
+    if (!nombreInput.value.trim() || !apellidoInput.value.trim()) {
+      nombreError.classList.add("show");
+      (nombreInput.value.trim() ? apellidoInput : nombreInput).focus();
+      return;
+    }
+    nombreError.classList.remove("show");
+
+    // El mail es obligatorio: es por donde se manda la informacion.
+    var emailInput = document.getElementById("f-email");
+    var emailError = document.getElementById("email-error");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+      emailError.classList.add("show");
+      emailInput.focus();
+      return;
+    }
+    emailError.classList.remove("show");
+
     var tel = normalizarTelefono(telInput.value);
     if (tel.length !== 10) {
       telWrap.classList.add("invalid");
@@ -1171,6 +1432,16 @@
       telInput.focus();
       return;
     }
+
+    // Sin jornada elegida no se puede mandar la informacion que corresponde.
+    var jornadaInput = document.getElementById("f-jornada");
+    var jornadaError = document.getElementById("jornada-error");
+    if (!jornadaInput.value) {
+      jornadaError.classList.add("show");
+      jornadaInput.focus();
+      return;
+    }
+    jornadaError.classList.remove("show");
 
     var body = new URLSearchParams();
     body.append("nombre",   document.getElementById("f-nombre").value.trim());
@@ -1180,15 +1451,28 @@
     body.append("jornada",  document.getElementById("f-jornada").value);
     body.append("origen",   "Formulario");
 
+    /* Se espera a que el POST salga antes de cambiar de pagina, con un tope
+       de 1,2 s para que nadie se quede esperando si la red esta lenta. */
+    var yaSalio = false;
+    function continuar(){
+      if (yaSalio) return;
+      yaSalio = true;
+      if (GRACIAS_URL) { window.location.href = GRACIAS_URL; return; }
+      form.classList.add("hide");
+      successBox.classList.add("show");
+    }
+
+    var submitBtn = form.querySelector("button[type=submit]");
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Enviando…"; }
+
     fetch(SHEET_ENDPOINT, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: body.toString()
-    }).catch(function(){ /* no-cors: la respuesta es opaca */ });
+    }).then(continuar, continuar); // no-cors: la respuesta es opaca
 
-    form.classList.add("hide");
-    successBox.classList.add("show");
+    setTimeout(continuar, 1200);
   });
 
   /* =========================================================
@@ -1198,51 +1482,103 @@
      en funcion de la jornada que la persona eligio, sin volver a preguntar.
      ========================================================= */
   var JORNADAS_CHAT = [
-    { id:"j1", label:"Kinesiología (24/10)", valor:"Jornada de Kinesiología Deportiva (24/10/2026)",
+    { id:"j1", label:"Kinesiología (31/10)", valor:"Kinesiología Deportiva (31/10)",
       titulo:"Kinesiología deportiva",
-      fecha:"Es el <b>sábado 24 de octubre de 2026</b>, de 9 a 13 h, en <b>Fournier 2353, Boedo</b> (CABA).",
-      dictan:"La encabeza <b>Luís García</b>, kinesiólogo de la Selección Argentina de fútbol, junto a Pablo Capucheti y Pablo Varela, kinesiólogo de Boca Juniors.",
-      temario:"Se trabaja evaluación funcional, prevención de lesiones y los protocolos de recuperación que se usan en selecciones nacionales.",
-      publico:"Es para kinesiólogos, estudiantes de kinesiología y profesionales que acompañen la recuperación de deportistas." },
-    { id:"j2", label:"Nutrición (31/10)", valor:"Jornada de Nutrición Deportiva (31/10/2026)",
-      titulo:"Nutrición deportiva",
-      fecha:"Es el <b>sábado 31 de octubre de 2026</b>, de 9 a 13 h, en <b>Fournier 2353, Boedo</b> (CABA).",
-      dictan:"La encabeza <b>Luciano Spena</b>, nutricionista de la Selección Argentina de fútbol, junto a Fernando Luna y el médico Eugenio Rossi.",
-      temario:"Se trabaja carga y recuperación nutricional en competencia, suplementación basada en evidencia y casos reales con deportistas de elite.",
-      publico:"Es para nutricionistas, médicos y estudiantes del área que trabajen o quieran trabajar con deportistas." },
-    { id:"j3", label:"Psicología (14/11)", valor:"Jornada de Psicología Deportiva (14/11/2026)",
+      fecha:"Es el <b>sábado 31 de octubre de 2026</b>, de <b>9 a 18 h</b>, en <b>Fournier 2353, Boedo</b> (CABA). Se cursa de forma independiente de las otras capacitaciones.",
+      precio:"La capacitación de kinesiología sale <b>$160.000</b>.",
+      dictan:"La encabeza <b>Luis García</b>, kinesiólogo de la Selección Argentina de fútbol, junto a Pablo Capuchetti y Pablo Varela, kinesiólogo de Boca Juniors.",
+      bios:[
+        ["Luis García", "Jefe del cuerpo de kinesiólogos de la Selección Argentina de fútbol desde 2006. Antes trabajó en Racing y en Boca, donde hizo investigaciones pioneras en biomecánica. Estuvo en cinco Copas del Mundo y fue parte del equipo campeón en Qatar 2022."],
+        ["Pablo Capuchetti", "Kinesiólogo y quiropráctico del cuerpo médico de la Selección Argentina. Acompañó la recuperación de figuras del plantel campeón del mundo, como el Dibu Martínez y Licha Martínez."],
+        ["Pablo Varela", "Kinesiólogo de Boca Juniors desde 2007 y director de evaluaciones kinésicas de Boca Lab. Con la Selección estuvo en tres Mundiales: Brasil 2014, Rusia 2018 y Qatar 2022. Es egresado de la Universidad Favaloro y docente de kinesiología deportiva y biomecánica."]
+      ],
+      temario:"<b>Tratamiento y readaptación funcional de lesiones deportivas</b>. Se trabaja:" +
+        "<ul><li>La readaptación a la actividad física como eje del proceso de rehabilitación deportiva</li>" +
+        "<li>Volumen, intensidad y direccionalidad de las lesiones musculares, por sobrecarga mecánica y articulares</li>" +
+        "<li>El análisis del movimiento: protocolo para el estudio de la huella motriz</li>" +
+        "<li>GPS: control de evolución y retorno deportivo</li></ul>",
+      publico:"Está pensada para <b>kinesiólogos, estudiantes de medicina y médicos deportólogos</b>, y para todas las personas interesadas en el mundo de la kinesiología deportiva." },
+    { id:"j3", label:"Psicología (14/11)", valor:"Psicología Deportiva (14/11)",
       titulo:"Psicología deportiva",
-      fecha:"Es el <b>sábado 14 de noviembre de 2026</b>, de 9 a 13 h, en <b>Fournier 2353, Boedo</b> (CABA).",
+      fecha:"Es el <b>sábado 14 de noviembre de 2026</b>, de <b>9 a 13 h</b>, en <b>Fournier 2353, Boedo</b> (CABA). Se cursa de forma independiente de las otras capacitaciones.",
+      precio:"La capacitación de psicología sale <b>$90.000</b>.",
       dictan:"La encabeza <b>Gustavo Ruiz</b>, psicólogo deportivo de Franco Colapinto, junto a Luciana Ortiz y Lisandro Aisa.",
-      temario:"Se trabaja el manejo de la presión en instancias decisivas y el rol del psicólogo dentro de un cuerpo técnico.",
-      publico:"Es para psicólogos, estudiantes de psicología y quienes acompañen la preparación mental de deportistas o equipos." },
-    { id:"j4", label:"Gestión de equipos (2027)", valor:"Jornada de Gestión de Equipos (2027)",
+      bios:[
+        ["Gustavo Ruiz", "Acompaña a Franco Colapinto desde que tenía 12 años en el karting y en el automovilismo internacional. Es magíster en psicología, con más de 30 años de experiencia en el alto rendimiento, creó el Sistema Mentor® y trabajó con Paula Pareto, los hermanos Benavides y Nicolás Laprovittola, entre otros grandes del deporte de nuestro país."],
+        ["Luciana Ortiz", "Psicóloga clínica especializada en deporte. Es la psicóloga de FOU y trabaja con diversos deportistas y con el equipo de fútbol femenino del Club Comunicaciones. Además, se dedica a la investigación en psicología del deporte."],
+        ["Lisandro Aisa", "Licenciado en Psicología por la UBA, trabaja en psicología aplicada al deporte con distintos profesionales. Es psicólogo deportivo del handball del Club Comunicaciones y de la Selección Argentina de Boccia. Además, es profesor de tenis y conoce la disciplina desde adentro de la cancha."]
+      ],
+      temario:"<b>El valor de equivocarse: la gestión del error y el circuito emocional del deportista</b>. Se trabaja:" +
+        "<ul><li>Proceso de aprendizaje deportivo: desde la cantidad hacia la calidad</li>" +
+        "<li>Entrenar para perder (y aprender): cómo lo que pensás y sentís moldea tu conducta deportiva</li>" +
+        "<li>Gestión emocional a través de herramientas psicológicas</li></ul>",
+      publico:"Es para <b>psicólogos, estudiantes de psicología y quienes acompañen la preparación mental de deportistas o equipos</b>, y para todas las personas interesadas en el mundo de la psicología deportiva." },
+    { id:"j2", label:"Nutrición (21/11)", valor:"Nutrición Deportiva (21/11)",
+      titulo:"Nutrición deportiva",
+      fecha:"Es el <b>sábado 21 de noviembre de 2026</b>, de <b>9 a 18 h</b>, en <b>Fournier 2353, Boedo</b> (CABA). Se cursa de forma independiente de las otras capacitaciones.",
+      precio:"La capacitación de nutrición sale <b>$160.000</b>.",
+      dictan:"La encabeza <b>Luciano Spena</b>, nutricionista de la Selección Argentina de fútbol, junto a Fernando Luna y el médico Eugenio Viviani Rossi.",
+      bios:[
+        ["Luciano Spena", "Nutricionista de la Selección Argentina de fútbol y director de la Licenciatura en Nutrición de la Universidad de Morón. Es, además, fundador de Antro Sport."],
+        ["Fernando Luna", "Nutricionista y profesor de Educación Física, magíster en Investigación Biomédica por la UNLP, donde da clases de grado y posgrado en la Facultad de Ciencias Médicas. Actualmente está realizando su doctorado."],
+        ["Eugenio «Toto» Viviani Rossi", "Médico especialista en nutrición, con formación en nutrición deportiva. Es vicepresidente de SAMEV y SACIS y codirige posgrados de suplementación en la UNLP."]
+      ],
+      temario:"<b>Nutrición deportiva en el deporte amateur y el alto rendimiento</b>:" +
+        "<ul><li>Composición corporal en el deporte de élite</li>" +
+        "<li>Cronobiología aplicada al deportista de alto rendimiento</li>" +
+        "<li>Buffers en el deporte</li>" +
+        "<li>Análisis crítico de la suplementación con magnesio, colágeno y creatina</li>" +
+        "<li>Recuperación nutricional basada en métricas</li>" +
+        "<li>Perfil bioquímico en atletas</li></ul>",
+      publico:"Está pensada para <b>nutricionistas, estudiantes de nutrición, estudiantes de medicina y médicos deportólogos</b>, y para todas las personas interesadas en el mundo de la nutrición deportiva." },
+    { id:"j4", label:"Gestión de equipos (2027)", valor:"Gestión de Equipos (2027)",
       titulo:"Gestión de equipos",
-      fecha:"Es en <b>2027</b>, con fecha a confirmar, en <b>Fournier 2353, Boedo</b> (CABA).",
+      fecha:"Es en <b>2027</b>, con fecha y horario a confirmar, en <b>Fournier 2353, Boedo</b> (CABA). Se cursa de forma independiente de las otras capacitaciones.",
+      precio:"El valor de esta capacitación se confirma junto con la fecha.",
       dictan:"La dicta <b>Julio Lamas</b>, ex entrenador de la Selección Argentina de básquet y referente del deporte argentino.",
-      temario:"Se trabaja cómo se construye y se sostiene un equipo campeón, el liderazgo en alta competencia y la conducción del cuerpo técnico.",
-      publico:"Es para entrenadores, dirigentes y cualquiera que conduzca equipos, dentro o fuera del deporte." },
-    { id:"j5", label:"Preparación física (2027)", valor:"Jornada de Preparación Física (2027)",
+      bios:[
+        ["Julio Lamas", "Alcanzó la cima del mundo FIBA al dirigir selecciones en Campeonatos Mundiales y Juegos Olímpicos, con un récord de 5 títulos de la Liga Nacional de Básquet, y fue pionero en la formación de la Generación Dorada argentina. Fue entrenador de la Selección Argentina y de la Selección de Japón, y es uno de los grandes referentes del deporte argentino."]
+      ],
+      temario:"Se trabaja:" +
+        "<ul><li>Liderazgo</li><li>Comunicación</li>" +
+        "<li>Organización de roles en los equipos de trabajo</li>" +
+        "<li>Resolución de conflictos</li>" +
+        "<li>Los vínculos en el alto rendimiento</li></ul>",
+      publico:"Es para <b>entrenadores, dirigentes y cualquiera que conduzca equipos</b>, dentro o fuera del deporte, y para todas las personas interesadas en el mundo de la gestión de equipos." },
+    { id:"j5", label:"Preparación física (2027)", valor:"Preparación Física (2027)",
       titulo:"Preparación física",
-      fecha:"Es en <b>2027</b>, con fecha a confirmar, en <b>Fournier 2353, Boedo</b> (CABA).",
-      dictan:"La encabeza <b>Horacio Anselmi</b>, licenciado en alto rendimiento deportivo, junto a Esteban Pizzi, preparador físico de la Selección Argentina de futsal.",
-      temario:"Se trabaja la planificación de la carga a lo largo de una temporada, la readaptación después de una lesión y el monitoreo del rendimiento.",
-      publico:"Es para preparadores físicos, entrenadores y profesionales que planifiquen cargas de entrenamiento." }
+      fecha:"Es en <b>2027</b>, con fecha y horario a confirmar, en <b>Fournier 2353, Boedo</b> (CABA). Se cursa de forma independiente de las otras capacitaciones.",
+      precio:"El valor de esta capacitación se confirma junto con la fecha.",
+      dictan:"La encabeza <b>Horacio Anselmi</b>, licenciado en alto rendimiento deportivo, junto a Esteban Pizzi, preparador físico de selecciones de AFA.",
+      bios:[
+        ["Horacio Anselmi", "Más de 40 años en equipos de élite: fue preparador físico de Los Pumas, Las Leonas, la Selección de pesas y el equipo campeón de la Copa Davis 2017, y coordinador de preparación física de Boca. Hoy es analista técnico en el ENARD y docente en la UBA y la Fundación Favaloro."],
+        ["Esteban Pizzi", "Preparador físico de las selecciones de futsal masculino de AFA y de fútbol femenino Sub 20, e instructor de CONMEBOL. Es director de deportes amateurs de Boca Juniors, director de entrenamiento de FOU y profesor en la Universidad Nacional de La Matanza."]
+      ],
+      temario:"Se trabaja:" +
+        "<ul><li>Desarrollo físico de los deportistas</li>" +
+        "<li>Rol del preparador físico en el deporte amateur y el alto rendimiento</li>" +
+        "<li>Progresión de contenidos de acuerdo a las etapas de desarrollo</li>" +
+        "<li>La importancia de los gestos técnicos en los trabajos de fuerza y potencia</li></ul>",
+      publico:"Es para <b>preparadores físicos, entrenadores y profesionales que planifiquen cargas de entrenamiento</b>, y para todas las personas interesadas en el mundo de la preparación física." }
   ];
 
   var LABELS = {
-    dictan:"+ Info de quiénes la dictan", valores:"Cuánto sale", cuando:"Cuándo y dónde es",
-    certificado:"¿Dan certificado?", inscripcion:"Cómo me inscribo", publico:"Para quién es",
-    otras:"Ver otras jornadas", cuales:"Qué jornadas hay", donde:"Dónde y cuándo son",
-    form:"Ir a la pre-inscripción", wa:"Hablar por WhatsApp"
+    dictan:"+ Info de quiénes la dictan", temario:"Temas de la capacitación", valores:"Cuánto sale", cuando:"Cuándo, dónde y cuánto dura",
+    certificado:"¿Dan certificado?", inscripcion:"Cómo me pre-inscribo", publico:"Para quién es",
+    otras:"Ver otras capacitaciones", cuales:"Qué capacitaciones hay", donde:"Dónde y cuándo son",
+    wa:"¡Quiero pagar la jornada!"
   };
 
   var VALORES =
-    "Si elegís hacer:" +
-    "<ul><li><b>1 jornada</b>: $150.000</li>" +
-    "<li><b>2 jornadas</b>: $240.000, con 20% de descuento</li>" +
-    "<li><b>3 jornadas</b>: $315.000, con 30% de descuento</li></ul>" +
-    "Los descuentos salen de combinar las jornadas que elijas, no hace falta que sean consecutivas. Además hay beneficios por inscripción temprana.";
+    "Cada capacitación se paga por separado:" +
+    "<ul><li><b>Kinesiología</b>: $160.000</li>" +
+    "<li><b>Psicología</b>: $90.000</li>" +
+    "<li><b>Nutrición</b>: $160.000</li></ul>" +
+    "<b>Beneficios económicos</b>" +
+    "<ul><li>10% off si te inscribís antes del <b>12/10</b></li>" +
+    "<li>5% off pagando por transferencia, acumulable solo con el de inscripción temprana</li>" +
+    "<li>Si sos <b>deportista de FOU</b> o <b>alumno o egresado de la Diplomatura en Gestión Deportiva de la UNSAM</b>: 20% off (no acumulable con los otros beneficios)</li></ul>" +
+    "Te pre-inscribís sin costo y te pasamos la información para pagar. <b>El lugar se reserva con el pago y el envío del comprobante.</b>";
 
   var panel = document.getElementById("chat-panel");
   var fab = document.getElementById("chat-fab");
@@ -1253,6 +1589,7 @@
   var datosOk = false;          // ya dejo sus datos: no se los volvemos a pedir
   var jornadaSel = null;        // jornada elegida: manda sobre todas las respuestas
   var captura = null;
+  var datosPersona = {};        // lo que ya dejo: se usa para armar el WhatsApp
 
   /* Los temas ya respondidos salen del menu. Los que dependen de la jornada
      vuelven a estar disponibles si cambia de jornada; los generales, no. */
@@ -1270,13 +1607,21 @@
 
   var ultimoMsg = null;
 
+  /* Que ve la persona: el arranque de la ultima respuesta (anclaVista) o el
+     final de la charla. Se recalcula cada vez que cambian las opciones de
+     abajo, porque al aparecer le quitan alto a la conversacion y tapaban lo
+     ultimo que se habia dicho. */
+  var anclaVista = null;
+  function ajustarVista(){ if (anclaVista) anclar(anclaVista); else scrollAlFinal(); }
+  if ("ResizeObserver" in window) new ResizeObserver(ajustarVista).observe(document.getElementById("chat-chips"));
+
   function decir(html, quien, sinScroll){
     var m = document.createElement("div");
     m.className = "msg " + (quien || "bot");
     m.innerHTML = html;
     cuerpo.appendChild(m);
     ultimoMsg = m;
-    if (!sinScroll) scrollAlFinal();
+    if (!sinScroll) { anclaVista = null; scrollAlFinal(); }
     return m;
   }
 
@@ -1293,13 +1638,29 @@
     }, 420);
   }
 
+  /* El WhatsApp del bot lleva un mensaje ya escrito: quien es y que jornada
+     le interesa, asi del otro lado saben con quien hablan. */
+  function mensajeWhatsapp(){
+    var cuando = jornadaSel ? (jornadaSel.label.match(/\(([^)]+)\)/) || [])[1] : "";
+    var quien = (captura && captura.datos.nombre) || datosPersona.nombre || "";
+    var msg = "Hola! ";
+    if (quien) msg += "Soy " + quien + ". ";
+    msg += jornadaSel
+      ? "Quiero pagar la inscripcion a la jornada de " + jornadaSel.titulo + (cuando ? " del " + cuando : "") + ". Me pasan los datos para el pago?"
+      : "Quiero pagar la inscripcion a una de las jornadas de FOU y UNSAM. Me pasan los datos para el pago?";
+    return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+  }
+
+  /* Va como enlace de verdad y no como window.open: en el celular el popup
+     queda bloqueado y el boton no hacia nada. */
   function chipWhatsapp(){
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip wa";
-    b.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 12.05 0Z"/></svg>' + LABELS.wa;
-    b.setAttribute("data-tema", "wa");
-    return b;
+    var a = document.createElement("a");
+    a.className = "chip wa";
+    a.href = mensajeWhatsapp();
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 12.05 0Z"/></svg>' + LABELS.wa;
+    return a;
   }
 
   function mostrarChips(ids){
@@ -1313,6 +1674,8 @@
       b.setAttribute("data-tema", id);
       zonaChips.appendChild(b);
     });
+    zonaChips.scrollTop = 0;
+    ajustarVista();
   }
 
   function chipsJornadas(conIndeciso){
@@ -1325,14 +1688,8 @@
       b.setAttribute("data-elegir", j.id);
       zonaChips.appendChild(b);
     });
-    if (conIndeciso) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "chip";
-      b.textContent = "Todavía no sé";
-      b.setAttribute("data-elegir", "j0");
-      zonaChips.appendChild(b);
-    }
+    zonaChips.scrollTop = 0;
+    ajustarVista();
   }
 
   /* El menu depende de si ya eligio jornada: si la eligio, todo va sobre ella. */
@@ -1340,41 +1697,46 @@
      al final se ancla el arranque de esa respuesta. */
   function menu(ancla){
     var base = jornadaSel
-      ? ["dictan", "cuando", "valores", "certificado", "inscripcion", "publico", "otras"]
+      ? ["dictan", "temario", "cuando", "valores", "certificado", "inscripcion", "publico", "otras"]
       : ["cuales", "valores", "donde", "certificado", "inscripcion", "publico"];
     var chips = base.filter(function(id){
       if (id === "otras" || id === "cuales") return true;
       return !visto(id);
     });
     var quedan = chips.some(function(id){ return id !== "otras" && id !== "cuales"; });
-    chips.push("form");
-    if (datosOk) chips.push("wa");
+    // Unica accion del bot: WhatsApp para pagar. Aparece apenas dejo los datos
+    // y siempre primero en la lista, que es lo que se busca que haga.
+    if (datosOk) chips.unshift("wa");
     var texto = quedan
       ? (jornadaSel ? "¿Qué más querés saber de " + jornadaSel.titulo + "?" : "¿Sobre qué querés saber?")
       : "Eso es todo lo principal. Si te quedó alguna duda puntual, escribinos por WhatsApp y te respondemos.";
     decirConDemora(texto, function(){
+      anclaVista = ancla || null;
       mostrarChips(chips);
-      if (ancla) anclar(ancla);
     }, !!ancla);
   }
 
   function listaJornadas(){
-    var items = JORNADAS_CHAT.map(function(j){ return "<li>" + j.titulo + " — " + j.label.replace(/^[^(]*\(?|\)?$/g, "") + "</li>"; });
-    return "Son <b>5 jornadas independientes</b>: podés hacer una sola o las que quieras." +
-           "<ul><li>Kinesiología deportiva — 24/10/2026</li>" +
-           "<li>Nutrición deportiva — 31/10/2026</li>" +
-           "<li>Psicología deportiva — 14/11/2026</li>" +
+    return "Son capacitaciones <b>independientes</b>: cada una se cursa por separado y anotarte a una no te compromete con las demás." +
+           "<ul><li>Kinesiología deportiva — sábado 31/10, de 9 a 18 h</li>" +
+           "<li>Psicología deportiva — sábado 14/11, de 9 a 13 h</li>" +
+           "<li>Nutrición deportiva — sábado 21/11, de 9 a 18 h</li>" +
            "<li>Gestión de equipos — 2027</li>" +
-           "<li>Preparación física — 2027</li></ul>";
+           "<li>Preparación física — 2027</li></ul>" +
+           "¡Anotate a la que te interesa!";
   }
+
+  var preguntas = 0;
 
   function responder(id){
     var j = jornadaSel;
+    if (id !== "otras") preguntas++;
 
     if (id === "cuales") {
       zonaChips.innerHTML = "";
       decirConDemora(listaJornadas(), function(){
-        decirConDemora("¿De cuál querés el detalle?", chipsJornadas);
+        var ancla = ultimoMsg;
+        decirConDemora("¿De cuál querés el detalle?", function(){ anclaVista = ancla; chipsJornadas(); }, true);
       });
       return;
     }
@@ -1387,22 +1749,25 @@
       marcarVisto(id);
       zonaChips.innerHTML = "";
       decirConDemora(
-        "Las jornadas son para profesionales y estudiantes del deporte y la salud: kinesiología, nutrición, psicología, preparación física, medicina deportiva, entrenadores y cuerpos técnicos.<br><br>Cada una apunta a un perfil distinto.",
-        function(){ decirConDemora("¿Cuál te interesa? Te cuento para quién es esa.", chipsJornadas); });
+        "Las jornadas son para profesionales y estudiantes del deporte y la salud: kinesiología, nutrición, psicología, preparación física, medicina deportiva, entrenadores y cuerpos técnicos, y para todas las personas interesadas en el mundo del deporte.<br><br>Cada una apunta a un perfil distinto.",
+        function(){
+          var ancla = ultimoMsg;
+          decirConDemora("¿Cuál te interesa? Te cuento para quién es esa.", function(){ anclaVista = ancla; chipsJornadas(); }, true);
+        });
       return;
     }
 
     var texto;
-    if (id === "dictan")      texto = j.dictan + "<br><br>" + j.temario;
+    if (id === "dictan")       texto = j.bios.map(function(b){ return "<b>" + b[0] + "</b><br>" + b[1]; }).join("<br><br>");
+    else if (id === "temario") texto = j.temario;
     else if (id === "cuando") texto = j.fecha;
-    else if (id === "donde")  texto = "Todas son presenciales en <b>Fournier 2353, Boedo</b> (CABA), de 9 a 13 h.<br><br>Las tres fechas de 2026 son el 24 y el 31 de octubre y el 14 de noviembre. Las otras dos son en 2027, a confirmar.";
-    else if (id === "valores") texto = VALORES;
+    else if (id === "donde")  texto = "Todas son presenciales en <b>Fournier 2353, Boedo</b> (CABA), y cada una se cursa por separado.<ul><li>Kinesiología: sábado 31/10, de 9 a 18 h</li><li>Psicología: sábado 14/11, de 9 a 13 h</li><li>Nutrición: sábado 21/11, de 9 a 18 h</li></ul>Gestión de equipos y preparación física son en 2027, a confirmar.";
+    else if (id === "valores") texto = (j && j.precio ? j.precio + "<br><br>" : "") + VALORES;
     else if (id === "certificado") texto = "Sí. Cada jornada entrega su <b>propio certificado oficial de la UNSAM</b>, a través de la Diplomatura en Política y Gestión Deportiva.";
     else if (id === "publico") texto = j.publico;
     else if (id === "inscripcion") {
-      texto = datosOk
-        ? "Ya tenemos tus datos, así que el equipo de FOU te va a escribir para coordinar el pago. Tu lugar queda confirmado <b>con el pago de la jornada</b>, y los cupos son limitados."
-        : "Dejás tus datos y te contactamos para coordinar el pago. Tu lugar queda confirmado con el pago de la jornada.";
+      texto = "Te <b>pre-inscribís acá mismo</b>, sin costo: dejás tus datos y te enviamos por mail o WhatsApp la información para pagar. <b>La reserva del lugar solo se confirma con el pago y el envío del comprobante.</b> Los cupos son limitados." +
+        (datosOk ? "<br><br>Como ya tenemos tus datos, te vamos a escribir con todo el detalle para que puedas pagar." : "");
     }
     if (!texto) return;
 
@@ -1439,7 +1804,7 @@
   function pedirPaso(){
     var paso = PASOS[captura.paso];
     decirConDemora(paso.texto, function(){
-      if (paso.campo === "jornada") chipsJornadas(true);
+      if (paso.campo === "jornada") chipsJornadas();
       else mostrarInput(paso);
     });
   }
@@ -1447,13 +1812,19 @@
   function mostrarInput(paso){
     zonaChips.innerHTML = "";
     var form = document.createElement("form");
-    form.style.cssText = "display:flex; gap:8px; width:100%;";
+    // Sin la validacion nativa: si no, con un mail mal escrito el navegador
+    // muestra su propio globo y el bot nunca llega a contestar.
+    form.noValidate = true;
+    // En pantallas angostas el boton va abajo, a lo ancho: si el visor recorta
+    // el borde derecho, Enviar sigue quedando a la vista.
+    form.style.cssText = "display:flex; flex-wrap:wrap; gap:8px; width:100%; min-width:0;";
     var input = document.createElement("input");
     input.type = paso.tipo === "email" ? "email" : "text";
     if (paso.tipo === "tel") input.inputMode = "numeric";
     input.placeholder = paso.placeholder;
     input.setAttribute("aria-label", paso.texto);
-    input.style.cssText = "flex:1; min-width:0; padding:10px 12px; border-radius:8px; border:1.5px solid rgba(28,24,17,0.18); font-family:'Exo',sans-serif; font-size:14px;";
+    input.enterKeyHint = "send";
+    input.style.cssText = "flex:1 1 auto; min-width:0; padding:10px 12px; border-radius:8px; border:1.5px solid rgba(28,24,17,0.18); font-family:'Exo',sans-serif; font-size:14px;";
     var enviar = document.createElement("button");
     enviar.type = "submit";
     enviar.className = "chip destacado";
@@ -1461,6 +1832,8 @@
     form.appendChild(input);
     form.appendChild(enviar);
     zonaChips.appendChild(form);
+    anclaVista = null;
+    ajustarVista();
     input.focus();
 
     form.addEventListener("submit", function(e){
@@ -1513,9 +1886,10 @@
       body: body.toString()
     }).catch(function(){ /* no-cors: la respuesta es opaca */ });
 
+    datosPersona = captura.datos;
     captura = null;
     datosOk = true;
-    decirConDemora("¡Listo! Ya guardamos tus datos y el equipo de FOU te va a escribir.", function(){
+    decirConDemora("¡Listo! Ya tenemos tus datos. Si querés, ya podés reservar tu vacante por WhatsApp. Igual te vamos a enviar por mail o WhatsApp la información de la capacitación. <b>Recordá que el lugar se reserva con el pago y el envío del comprobante.</b>", function(){
       if (jornadaSel) {
         decirConDemora("Mientras tanto, te cuento de <b>" + jornadaSel.titulo + "</b>. " + jornadaSel.fecha + "<br><br>" + jornadaSel.dictan, function(){ menu(ultimoMsg); });
       } else {
@@ -1547,23 +1921,45 @@
     }
 
     var tema = chip.getAttribute("data-tema");
-    if (tema === "wa") { window.open(waLink, "_blank", "noopener"); return; }
-    if (tema === "form") {
-      cerrarChat();
-      document.getElementById("inscripcion").scrollIntoView({ behavior:"smooth", block:"start" });
-      return;
-    }
     decir(LABELS[tema] || tema, "user");
     responder(tema);
   });
 
+  /* El panel se ata al area que el celular realmente muestra (visualViewport),
+     no al ancho de la pagina: adentro del visor de artefactos la pagina mide
+     mas que la pantalla y el panel quedaba cortado a la derecha. Tambien
+     acompana al teclado, que tapa el pie sin achicar el viewport. */
+  var vv = window.visualViewport || null;
+
+  function ajustarPanelAlArea(){
+    if (!vv || !panel.classList.contains("abierto")) return;
+    if (vv.width > 700) {   // en escritorio manda el CSS
+      panel.removeAttribute("style");
+      return;
+    }
+    panel.style.position = "fixed";
+    panel.style.left = vv.offsetLeft + "px";
+    panel.style.top = vv.offsetTop + "px";
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+    panel.style.width = vv.width + "px";
+    panel.style.height = vv.height + "px";
+    panel.style.maxHeight = vv.height + "px";
+  }
+
+  if (vv) {
+    vv.addEventListener("resize", ajustarPanelAlArea);
+    vv.addEventListener("scroll", ajustarPanelAlArea);
+  }
+
   function abrirChat(){
     panel.classList.add("abierto");
     fab.classList.add("oculto");
+    ajustarPanelAlArea();
     if (!iniciado) {
       iniciado = true;
-      decir("¡Hola! Soy el asistente virtual de las jornadas FOU × UNSAM.");
-      decirConDemora("Antes de contarte todo, dejame tus datos así el equipo puede seguir el contacto. Son 30 segundos.", empezarCaptura);
+      decir("¡Hola! Soy el asistente virtual de las jornadas de FOU y UNSAM. Cada jornada se cursa por separado, así que vos elegís la que más te interesa.");
+      decirConDemora("Antes de contarte todo, dejame tus datos así te enviamos la información de la capacitación que querés hacer. Te va a llevar solo 30 segundos.", empezarCaptura);
     }
     document.getElementById("chat-close").focus();
   }
@@ -1571,6 +1967,7 @@
   function cerrarChat(){
     panel.classList.remove("abierto");
     fab.classList.remove("oculto");
+    panel.removeAttribute("style");   // vuelve a mandar el CSS
   }
 
   fab.addEventListener("click", abrirChat);
@@ -1599,3 +1996,6 @@
 
 })();
 </script>
+
+</body>
+</html>
