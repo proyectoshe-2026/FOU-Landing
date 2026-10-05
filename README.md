@@ -1,4 +1,4 @@
-# Landing FOU y UNSAM — Jornadas de formación
+# Landing FOU y UNSAM: Jornadas de formación
 
 Landing de pre-inscripción para las jornadas de formación profesional que organizan
 FOU (centro de entrenamiento y medicina deportiva) y la Diplomatura en Política y
@@ -13,41 +13,33 @@ y el contenedor de Google Tag Manager.
 
 ---
 
-## Publicar en Vercel
+## Cómo se publica
 
-No hay que compilar nada: se sirve `index.html` tal cual.
+```
+editar en local → git push a main → Cloudflare Pages despliega solo → capacitaciones.fou.com.ar
+```
 
-1. Subir este repositorio a GitHub.
-2. En Vercel: **Add New → Project → Import** el repo.
-3. Configuración:
-   - **Framework Preset:** `Other`
-   - **Build Command:** vacío (desactivar el override)
-   - **Output Directory:** vacío o `.` (la raíz del repo)
-   - **Install Command:** vacío
-4. Deploy. La landing queda en `/`.
-
-## Dominio con Cloudflare
-
-El DNS está en Cloudflare y el hosting en Vercel.
-
-1. En Vercel, **Project → Settings → Domains**, agregar `capacitaciones.fou.com.ar`.
-2. En Cloudflare, crear el registro que pide Vercel:
-
-   ```
-   Tipo    Nombre           Contenido
-   CNAME   capacitaciones   cname.vercel-dns.com
-   ```
-
-   Para un dominio raíz (sin subdominio) Vercel pide `A → 76.76.21.21`.
-3. **Si dejás el proxy de Cloudflare activado (nube naranja):** poner
-   **SSL/TLS → Overview → Full (strict)**. Con "Flexible" el sitio entra en
-   redirección infinita. Si preferís evitar el tema, poner la nube en gris
-   (DNS only) y que Vercel maneje el certificado.
-4. Esperar a que Vercel marque el dominio como *Valid Configuration*.
+- **Hosting:** Cloudflare Pages, proyecto `fou-landing`, conectado a este repo.
+  Cada push a `main` sale a producción en segundos. No hay que subir nada a mano.
+- **Configuración del proyecto en Cloudflare Pages:** Framework preset `None`,
+  build command vacío, output directory `/` (la raíz del repo).
+- **Dominio:** `capacitaciones.fou.com.ar`, cargado en Workers & Pages → fou-landing →
+  Custom domains. Cloudflare crea el registro `CNAME capacitaciones → fou-landing.pages.dev`
+  y el certificado. **No editar ese CNAME a mano** en el DNS.
+- **Ver un deploy:** Workers & Pages → fou-landing → Deployments. El último commit de
+  `main` tiene que figurar en *Success* como *Production*.
+- **Volver a una versión anterior:** en Deployments, menú (⋯) del deploy bueno →
+  *Rollback to this deployment*.
+- **Cambios grandes:** probarlos antes en local con `serve.ps1`, o subirlos a una rama
+  aparte (Cloudflare Pages genera una URL de preview por rama) y después mergear a `main`.
+- **Headers o redirecciones:** Cloudflare Pages usa archivos `_headers` y `_redirects`
+  en la raíz del repo.
+- **Si un cambio no se ve:** probar en ventana privada. Si sigue igual,
+  Cloudflare → Caching → Purge.
 
 ---
 
-## La página de gracias (se entrega aparte)
+## La página de gracias
 
 Al enviar el formulario, la persona es redirigida a:
 
@@ -55,80 +47,90 @@ Al enviar el formulario, la persona es redirigida a:
 capacitaciones.fou.com.ar/gracias-registro
 ```
 
-Esa página viaja en un paquete separado. **Tiene que quedar publicada en esa misma
-ruta del mismo dominio**, porque la landing redirige ahí. Hay dos formas:
+La página vive en `gracias-registro/index.html` y Cloudflare Pages la sirve en
+`/gracias-registro` sin configurar nada. La ruta se define en la constante
+`GRACIAS_URL` de `landing.src.html`. Con `GRACIAS_URL = ""` el formulario no
+redirige: muestra la confirmación dentro de la misma tarjeta.
 
-- **Recomendada:** copiar la carpeta `gracias-registro/` (con su `index.html` adentro)
-  a la raíz de este repo antes de deployar. Vercel la sirve en `/gracias-registro`
-  sin configurar nada.
-- **Alternativa:** si la página va a vivir en otra ruta o en otro dominio, cambiar la
-  constante `GRACIAS_URL` en `landing.src.html` (buscar `GRACIAS_URL`) y regenerar
-  `index.html`, o editar el mismo valor directo en `index.html`.
-
-Con `GRACIAS_URL = ""` el formulario no redirige: muestra la confirmación dentro de
-la misma tarjeta.
+El chat no redirige: después de guardar los datos sigue respondiendo dudas.
 
 ---
 
-## Pendiente: conectar el formulario con la Google Sheet
+## Formulario y Google Sheet
 
-Hoy el formulario **valida y redirige, pero todavía no guarda los datos**. Falta
-publicar el backend:
+El formulario y el chat mandan un `POST` (`mode: 'no-cors'`) a un Google Apps Script
+publicado como aplicación web (`apps-script.gs`). El script:
 
-1. Abrir la Sheet "Jornadas de capacitación Fou" → **Extensiones → Apps Script**.
-2. Pegar el contenido de `apps-script.gs` y guardar.
-3. **Implementar → Nueva implementación → Aplicación web**, con
-   *Ejecutar como: Yo* y *Quién tiene acceso: Cualquier usuario*.
-4. Copiar la URL que termina en `/exec` y pegarla en la constante `SHEET_ENDPOINT`
-   de `landing.src.html` (buscar `REEMPLAZAR`). Regenerar `index.html` con
-   `build.ps1`, o reemplazar el mismo texto directo en `index.html`.
+1. Escribe una fila en la Sheet "Jornadas de capacitación Fou", pestaña `Pre-inscriptos`.
+   Columnas: Nombre · Apellido · Mail · Teléfono · Jornada · Fecha del dato · Origen
+   (`Formulario` o `Chat`). El teléfono se normaliza a `+549` + 10 dígitos.
+2. Manda el mail de confirmación de la jornada elegida vía EnvíaloSimple.
 
-El formulario y el chat mandan un `POST` con `mode: 'no-cors'`. Columnas que escribe:
-Nombre · Apellido · Mail · Teléfono · Jornada · Fecha del dato · Origen
-(`Formulario` o `Chat`). El teléfono se normaliza a `+549` + 10 dígitos.
+La URL del script (termina en `/exec`) está en la constante `SHEET_ENDPOINT` de
+`landing.src.html`. La API key de EnvíaloSimple va en Propiedades del script de
+Apps Script, **nunca en este repo**.
+
+Si se cambia `apps-script.gs`, hay que volver a implementarlo en el editor de
+Apps Script: Implementar → Administrar implementaciones → lápiz → Versión: Nueva →
+Implementar. Así la URL `/exec` se mantiene.
+
+Las claves de `MAILS_POR_JORNADA` en `apps-script.gs` tienen que ser idénticas a los
+`value` del `<select name="jornada">` de `landing.src.html`. Si no coinciden, el mail
+no se envía.
 
 ---
 
 ## Google Tag Manager
 
-Ya está instalado el contenedor **GTM-59CVWFCL**: el `<script>` en el `<head>` y el
-`<noscript>` como primer elemento del `<body>`. La página de gracias lo tiene también.
+Está instalado el contenedor **GTM-59CVWFCL** en la landing y en la página de
+gracias: el `<script>` en el `<head>` y el `<noscript>` como primer elemento del
+`<body>`. Las etiquetas (Analytics, píxeles, conversiones) se configuran dentro de
+tagmanager.google.com, no en este código.
 
 ---
 
 ## Cómo editar la landing
 
 ```
-index.html          el sitio publicable (GENERADO: no editar a mano)
-landing.src.html    la fuente: acá se edita todo
-build.ps1           genera index.html embebiendo los assets
-serve.ps1           servidor local en http://localhost:8899
-apps-script.gs      backend del formulario (Google Apps Script)
+index.html                  el sitio publicable (GENERADO: no editar a mano)
+landing.src.html            la fuente: acá se edita todo
+build.ps1                   genera index.html embebiendo los assets
+serve.ps1                   servidor local en http://localhost:8899
+apps-script.gs              backend del formulario (Google Apps Script)
+gracias-registro/           página de gracias
+mail-img/                   imágenes de los mails de confirmación (las cargan los mails desde el sitio)
 assets/
-  fotos/            los 12 retratos ya procesados (480x640)
-  fou-logo-*.png    logos de FOU
-  unsam-pyg-*.png   logo de Política y Gobierno UNSAM (blanco y oscuro)
-  pattern-*.png     patrones de la marca
+  fotos/                    los 12 retratos ya procesados (480x640)
+  fou-logo-*.png            logos de FOU
+  unsam-pyg-*.png           logo de Política y Gobierno UNSAM (blanco y oscuro)
+  pattern-*.png             patrones de la marca
+  fou-og.jpg                imagen para la vista previa al compartir el link (1200x630)
+extraer-pdf.ps1, prep-*.ps1 scripts de una sola vez (preparación de imágenes)
 ```
 
 Flujo de trabajo:
 
 ```powershell
+# 0. traer lo último del repo
+git pull --rebase origin main
 # 1. editar landing.src.html
 # 2. regenerar
 powershell -ExecutionPolicy Bypass -File build.ps1
 # 3. previsualizar
 powershell -ExecutionPolicy Bypass -File serve.ps1
+# 4. publicar
+git add -A
+git commit -m "Describe el cambio"
+git push origin main
 ```
 
 `build.ps1` reemplaza los marcadores `__LOGO_NEGRO_MARCA__`, `__UNSAM__`,
 `__FOTO_<slug>__`, etc. por los data URI correspondientes. Usa `System.Drawing`,
 así que **corre en Windows PowerShell 5.1**.
 
-**Desde Mac o Linux no hace falta correrlo:** `index.html` ya está generado y es lo
-único que se publica. Se puede editar directo, pero esos cambios se pierden si
-alguien vuelve a correr el build desde la fuente. Si se trabaja así, conviene
-volcar el cambio también en `landing.src.html`.
+**Desde Mac o Linux no hace falta correrlo:** `index.html` ya está generado. Se puede
+editar directo, pero esos cambios se pierden si alguien vuelve a correr el build desde
+la fuente. Si se trabaja así, conviene volcar el cambio también en `landing.src.html`.
 
 ---
 
