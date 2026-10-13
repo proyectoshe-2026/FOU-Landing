@@ -13,7 +13,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-59CVWFCL');</script>
 <!-- End Google Tag Manager -->
-<meta name="description" content="Recibimos tu pre-inscripción. En breve te enviamos la información para pagar y reservar tu lugar en las jornadas de FOU y UNSAM.">
+<meta name="description" content="Recibimos tu pre-inscripción. Te enviamos por correo la información para pagar y reservar tu lugar en las jornadas de FOU y UNSAM.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Exo:wght@400;500;600&display=swap">
 <style>
   :root{
@@ -242,6 +242,44 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .send .btn{ margin-top:16px; }
   .later{ margin-top:14px; font-size:13px; color:var(--text-on-ink-muted); }
 
+  /* ---------- valores: reservá por WhatsApp y pagá menos ---------- */
+  .vgrid{ margin-top:20px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  @media (max-width:760px){ .vgrid{ grid-template-columns:1fr; } }
+  .vcard{
+    background:#151515; border:1px solid rgba(244,239,228,0.14); border-radius:12px;
+    padding:18px; display:flex; flex-direction:column;
+  }
+  .vcard h3{ font-size:17px; }
+  .vwhen{ margin-top:4px; font-size:13px; color:var(--text-on-ink-muted); }
+  .vreal-label{ margin-top:14px; font-size:12.5px; color:var(--text-on-ink-muted); }
+  .vreal{
+    font-family:'Montserrat',sans-serif; font-weight:800; font-size:26px; line-height:1.1;
+    color:var(--text-on-ink-muted); margin-bottom:14px;
+    text-decoration:line-through; text-decoration-color:#E0573F; text-decoration-thickness:3px;
+  }
+  .vtier{ border:1px solid rgba(244,239,228,0.14); border-radius:10px; padding:12px 14px; margin-bottom:8px; }
+  .vtag{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:15px; }
+  .vcond{ margin:2px 0 6px; font-size:12.5px; line-height:1.35; color:var(--text-on-ink-muted); }
+  .vp{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:22px; line-height:1.1; color:var(--text-on-ink); }
+  .vs{ margin-top:4px; font-size:13px; font-weight:600; color:var(--green); }
+  .vtier.best{ background:rgba(155,234,46,0.08); border:2px solid var(--green); }
+  .vtier.best .vp{ font-size:28px; }
+  .vsave{
+    display:inline-block; margin-top:8px; padding:5px 12px; border-radius:999px;
+    background:var(--green); color:var(--ink);
+    font-family:'Montserrat',sans-serif; font-weight:800; font-size:13px;
+  }
+  .vgroup{ margin:6px 0 16px; font-size:13px; line-height:1.4; color:var(--text-on-ink-muted); }
+  .vgroup b{ color:var(--text-on-ink); font-family:'Montserrat',sans-serif; font-weight:800; }
+  .vcard .btn{ margin-top:auto; white-space:normal; text-align:center; padding:13px 14px; }
+  .vnote{ margin-top:14px; font-size:12.5px; color:var(--text-on-ink-muted); }
+  .send > div{ flex:1; min-width:0; }
+  .send .bank{ margin-top:16px; }
+  /* Botón de comprobante: centrado y con el verde de los demás botones. */
+  .send-cta{ margin-top:22px; display:flex; justify-content:center; }
+  .btn-wa{ width:min(100%,420px); padding:15px 22px; font-size:15px; font-weight:800; border-radius:8px; }
+  .btn-wa svg{ flex:none; }
+
   /* ---------- pie ---------- */
   .foot{
     position:relative; z-index:1;
@@ -282,96 +320,110 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <p class="gracias">¡Gracias!</p>
     <h1>¡Listo, ya te pre-inscribiste!</h1>
-    <p class="lead">En breve te escribimos por WhatsApp o mail. Ya podés reservar tu lugar en las jornadas 2026.
-      <a class="aca" href="#reservar">Hacelo acá
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v15m0 0-6-6m6 6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <b>Recordá que solo se confirma con el pago con el envío del comprobante por WhatsApp a FOU.</b></p>
+    <p class="lead">Recibiste un correo con toda la información que necesitás para reservar tu lugar en las Jornadas 2026. Si no lo encontrás, revisá la sección de Promociones o la carpeta de <i>Spam</i> de tu email.
+      <b>Recordá que tu vacante solo se confirma con el pago y el envío del comprobante por WhatsApp a FOU.</b></p>
 
     <!-- ============================================================
-         PAGO — datos de "Precios y Beneficios definidos.xlsx".
-         Hasta el 12/10 (inclusive) rige el 10% off de la primera semana
-         y el 15% por transferencia. Desde el 13/10 el script de abajo pasa
-         solo a los links y precios que estan en data-despues-*.
+         VALORES (cambios del 12-10-2026): beneficio reservando por WhatsApp.
+         Cada botón "Solicitar mi beneficio" va al WhatsApp de Juana con
+         el mensaje de su jornada.
          ============================================================ -->
     <section class="pay" id="reservar" aria-labelledby="pay-title">
 
       <div class="pay-step">
         <span class="num" aria-hidden="true">1</span>
         <div>
-          <h2 id="pay-title">Pagá y reservá tu lugar</h2>
-          <p data-solo-promo>Pagando hasta el 12/10 tenés <b>10% off con Mercado Pago</b> o <b>15% off por transferencia</b>.</p>
-          <p data-solo-despues hidden>Pagá con Mercado Pago o por transferencia, con <b>5% off</b>.</p>
+          <h2 id="pay-title">Reservá por WhatsApp y pagá menos</h2>
+          <p>Inscribiéndote por WhatsApp tenés <b>10% off</b>. Si además pagás por transferencia, se suma 5% más: <b>15% off en total</b>.</p>
         </div>
       </div>
 
-      <div class="pay-grid">
-        <article class="pcard">
+      <div class="vgrid">
+        <article class="vcard">
           <h3>Kinesiología</h3>
-          <p class="pdate">Sábado 31/10</p>
-          <p class="price"><s data-solo-promo>$160.000</s> <strong data-despues="$160.000">$144.000</strong></p>
-          <a class="btn btn-primary btn-block" id="mp-kinesiologia"
-             href="https://mpago.la/1mrAwVd" data-despues-href="https://mpago.la/2345LKy"
-             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
-        </article>
-        <article class="pcard">
-          <h3>Psicología</h3>
-          <p class="pdate">Sábado 14/11</p>
-          <p class="price"><s data-solo-promo>$90.000</s> <strong data-despues="$90.000">$81.000</strong></p>
-          <a class="btn btn-primary btn-block" id="mp-psicologia"
-             href="https://mpago.la/1crFaof" data-despues-href="https://mpago.la/2b5d7qy"
-             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
-        </article>
-        <article class="pcard">
-          <h3>Nutrición</h3>
-          <p class="pdate">Sábado 21/11</p>
-          <p class="price"><s data-solo-promo>$160.000</s> <strong data-despues="$160.000">$144.000</strong></p>
-          <!-- REVISAR: en el Excel, el link de Nutricion a precio de lista es el
-               mismo que el de Kinesiologia (mpago.la/2345LKy, "Capacitacion
-               Kinesiologia"). Cambiar data-despues-href cuando FOU pase el correcto. -->
-          <a class="btn btn-primary btn-block" id="mp-nutricion"
-             href="https://mpago.la/2axZ8JA" data-despues-href="https://mpago.la/2345LKy"
-             target="_blank" rel="noopener">Pagar con Mercado Pago</a>
-        </article>
-      </div>
-
-      <div class="transfer">
-        <h3>O por transferencia bancaria</h3>
-        <div class="bank">
-          <div><div><span>Banco</span><b>Credicoop</b></div></div>
-          <div>
-            <div><span>Alias</span><b>fou.arg</b></div>
-            <button type="button" class="copy" data-copiar="fou.arg">Copiar</button>
+          <p class="vwhen">Sábado 31/10, de 9 a 18 h</p>
+          <p class="vreal-label">Valor real</p>
+          <p class="vreal">$160.000</p>
+          <div class="vtier">
+            <p class="vtag">10% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp</p>
+            <p class="vp">$144.000</p>
+            <p class="vs">Ahorrás $16.000</p>
           </div>
-        </div>
-        <table class="tprices">
-          <thead>
-            <tr>
-              <th scope="col">Jornada</th>
-              <th scope="col">Transferencia <small data-despues="5% off">15% off hasta el 12/10</small></th>
-              <th scope="col">UNSAM y FOU <small>20% off</small></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Kinesiología</td><td><strong data-despues="$152.000">$136.000</strong></td><td>$128.000</td></tr>
-            <tr><td>Psicología</td><td><strong data-despues="$85.000">$76.500</strong></td><td>$72.000</td></tr>
-            <tr><td>Nutrición</td><td><strong data-despues="$152.000">$136.000</strong></td><td>$128.000</td></tr>
-          </tbody>
-        </table>
-        <p class="fine">El 20% es para alumnos y egresados de la Diplomatura UNSAM y deportistas de FOU. Solo por transferencia y no se suma a otros beneficios.</p>
+          <div class="vtier best">
+            <p class="vtag">15% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp y pagás por transferencia</p>
+            <p class="vp">$136.000</p>
+            <span class="vsave">Ahorrás $24.000</span>
+          </div>
+          <p class="vgroup">¿Sos de UNSAM, FOU o club? <b>20% off: $128.000</b>. Ahorrás $32.000.</p>
+          <a class="btn btn-primary btn-block" href="https://wa.me/5491127998087?text=%C2%A1Hola%20Juana%21%20Quiero%20solicitar%20mi%20beneficio%20para%20la%20inscripci%C3%B3n%20a%20la%20jornada%20de%20Kinesiolog%C3%ADa%20%F0%9F%92%AA%20%C2%BFMe%20cont%C3%A1s%20c%C3%B3mo%20hago%20para%20reservar%20mi%20lugar%3F" target="_blank" rel="noopener">Solicitar mi beneficio</a>
+        </article>
+        <article class="vcard">
+          <h3>Psicología</h3>
+          <p class="vwhen">Sábado 14/11, de 9 a 13 h</p>
+          <p class="vreal-label">Valor real</p>
+          <p class="vreal">$90.000</p>
+          <div class="vtier">
+            <p class="vtag">10% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp</p>
+            <p class="vp">$81.000</p>
+            <p class="vs">Ahorrás $9.000</p>
+          </div>
+          <div class="vtier best">
+            <p class="vtag">15% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp y pagás por transferencia</p>
+            <p class="vp">$76.500</p>
+            <span class="vsave">Ahorrás $13.500</span>
+          </div>
+          <p class="vgroup">¿Sos de UNSAM, FOU o club? <b>20% off: $72.000</b>. Ahorrás $18.000.</p>
+          <a class="btn btn-primary btn-block" href="https://wa.me/5491127998087?text=%C2%A1Hola%20Juana%21%20Quiero%20solicitar%20mi%20beneficio%20para%20la%20inscripci%C3%B3n%20a%20la%20jornada%20de%20Psicolog%C3%ADa%20%F0%9F%A7%A0%20%C2%BFMe%20cont%C3%A1s%20c%C3%B3mo%20hago%20para%20reservar%20mi%20lugar%3F" target="_blank" rel="noopener">Solicitar mi beneficio</a>
+        </article>
+        <article class="vcard">
+          <h3>Nutrición</h3>
+          <p class="vwhen">Sábado 21/11, de 9 a 18 h</p>
+          <p class="vreal-label">Valor real</p>
+          <p class="vreal">$160.000</p>
+          <div class="vtier">
+            <p class="vtag">10% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp</p>
+            <p class="vp">$144.000</p>
+            <p class="vs">Ahorrás $16.000</p>
+          </div>
+          <div class="vtier best">
+            <p class="vtag">15% off</p>
+            <p class="vcond">Si te inscribís por WhatsApp y pagás por transferencia</p>
+            <p class="vp">$136.000</p>
+            <span class="vsave">Ahorrás $24.000</span>
+          </div>
+          <p class="vgroup">¿Sos de UNSAM, FOU o club? <b>20% off: $128.000</b>. Ahorrás $32.000.</p>
+          <a class="btn btn-primary btn-block" href="https://wa.me/5491127998087?text=%C2%A1Hola%20Juana%21%20Quiero%20solicitar%20mi%20beneficio%20para%20la%20inscripci%C3%B3n%20a%20la%20jornada%20de%20Nutrici%C3%B3n%20%F0%9F%A5%97%20%C2%BFMe%20cont%C3%A1s%20c%C3%B3mo%20hago%20para%20reservar%20mi%20lugar%3F" target="_blank" rel="noopener">Solicitar mi beneficio</a>
+        </article>
       </div>
+      <p class="vnote">El 20% off para UNSAM, FOU y clubes no se acumula con los otros descuentos. Cada jornada se paga por separado y tiene certificado oficial UNSAM.</p>
 
       <div class="pay-step send">
         <span class="num" aria-hidden="true">2</span>
         <div>
           <h2>Mandanos el comprobante</h2>
           <p>Con el comprobante te dejamos el lugar confirmado.</p>
-          <a class="btn btn-light" id="wa-comprobante"
-             href="https://wa.me/5491168930497?text=%C2%A1Hola!%20Ya%20hice%20la%20reserva%20de%20mi%20vacante.%0AAdjunto%20el%20pago.%0AMi%20nombre%20es%3A%20%0AMi%20mail%20es%3A%20%0AMe%20anot%C3%A9%20a%20la%20jornada%20de%3A%20"
-             target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.15c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
-            Enviar comprobante por WhatsApp
-          </a>
+          <div class="bank">
+            <div><div><span>Banco</span><b>Credicoop</b></div></div>
+            <div>
+              <div><span>Alias</span><b>fou.arg</b></div>
+              <button type="button" class="copy" data-copiar="fou.arg">Copiar</button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="send-cta">
+        <a class="btn btn-primary btn-wa" id="wa-comprobante"
+           href="https://wa.me/5491168930497?text=%C2%A1Hola!%20Ya%20hice%20la%20reserva%20de%20mi%20vacante.%0AAdjunto%20el%20pago.%0AMi%20nombre%20es%3A%20%0AMi%20mail%20es%3A%20%0AMe%20anot%C3%A9%20a%20la%20jornada%20de%3A%20"
+           target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.15c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.16 1.71 2.61 4.15 3.66.58.25 1.03.4 1.39.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
+          Enviar comprobante por WhatsApp
+        </a>
       </div>
 
       <p class="later">¿Elegiste Gestión de equipos o Preparación física? Son en 2027: te avisamos cuando abra la inscripción.</p>
@@ -407,21 +459,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 (function(){
   "use strict";
-
-  /* Ultimo momento del 10% off de primera semana (los links de MP dicen
-     "hasta 12/10"). Pasada esta fecha se muestran precio de lista y 5%. */
-  var FIN_PRIMERA_SEMANA = new Date("2026-10-12T23:59:59-03:00");
-
-  if (new Date() > FIN_PRIMERA_SEMANA) {
-    document.querySelectorAll("[data-solo-promo]").forEach(function(el){ el.hidden = true; });
-    document.querySelectorAll("[data-solo-despues]").forEach(function(el){ el.hidden = false; });
-    document.querySelectorAll("[data-despues]").forEach(function(el){
-      el.textContent = el.getAttribute("data-despues");
-    });
-    document.querySelectorAll("[data-despues-href]").forEach(function(el){
-      el.href = el.getAttribute("data-despues-href");
-    });
-  }
 
   /* Copiar el alias sin salir de la pagina. */
   document.querySelectorAll("[data-copiar]").forEach(function(btn){
