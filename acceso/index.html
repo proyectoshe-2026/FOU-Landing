@@ -29,9 +29,12 @@
   .btn-light{ background:var(--text); color:var(--ink); }
   .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line); }
   .row{ display:flex; gap:8px; } .row input{ flex:1; } .row .btn{ width:auto; margin-top:0; padding:13px 16px; }
-  #lector{ position:relative; width:100%; border-radius:12px; overflow:hidden; margin-top:12px; background:#000; }
-  #lector video{ display:block; width:100%; height:auto; }
-  #lector .guia{ position:absolute; left:6%; right:6%; top:30%; bottom:30%; border:3px solid var(--green); border-radius:10px; box-shadow:0 0 0 999px rgba(0,0,0,0.35); pointer-events:none; }
+  /* Alto fijo: en el celular la cámara viene vertical y, sin tope, el video empujaba los botones
+     fuera de la pantalla. El recuadro es ancho y bajo, como el código de barras del DNI. */
+  #lector{ position:relative; width:100%; height:min(46vh, 340px); border-radius:12px; overflow:hidden; margin-top:12px; background:#000; }
+  #lector video{ display:block; width:100%; height:100%; object-fit:cover; }
+  #lector .guia{ position:absolute; left:5%; right:5%; top:32%; height:36%; border:3px solid var(--green); border-radius:10px; box-shadow:0 0 0 999px rgba(0,0,0,0.30); pointer-events:none; }
+  #lector .estado{ position:absolute; left:0; right:0; bottom:8px; text-align:center; font-size:13px; color:#fff; text-shadow:0 1px 3px #000; }
   .tips{ font-size:13px; color:var(--muted); margin-top:8px; }
   .acciones{ display:flex; gap:8px; } .acciones .btn{ margin-top:10px; }
   .res{ border-radius:14px; padding:18px; margin-bottom:14px; }
@@ -68,7 +71,7 @@
 
     <section class="card">
       <button class="btn btn-primary" id="escanear">Escanear QR o DNI</button>
-      <div id="lector" class="hidden"><video id="video" playsinline muted></video><div class="guia"></div></div>
+      <div id="lector" class="hidden"><video id="video" playsinline muted></video><div class="guia"></div><div class="estado" id="estadoCam">Buscando código…</div></div>
       <p class="tips hidden" id="tips">DNI: apuntá al código de barras del frente (el rectángulo de rayitas) y acercalo hasta que ocupe todo el ancho del recuadro. Buena luz y sin reflejos.</p>
       <div class="acciones hidden" id="acciones">
         <button class="btn btn-ghost" id="linterna">Linterna</button>
@@ -204,18 +207,37 @@
       $("linterna").classList.toggle("hidden", !caps.torch);
       var v = $("video"); v.srcObject = s;
       return v.play();
-    }).then(function(){ buscando = true; ciclo(); })
+    }).then(function(){
+      buscando = true; ciclo();
+      $("lector").scrollIntoView({ behavior:"smooth", block:"start" });
+    })
       .catch(function(e){
         detenerCamara();
         mostrar("bad", "Sin cámara", e && e.message === "sin lector" ? "No se pudo cargar el lector. Revisá la conexión y recargá la página." : "Dale permiso a la cámara en el navegador, o usá \"Sacar foto del DNI\" o tipeá el número.");
       });
   }
 
+  /* Vueltas alternadas: cuadro completo, y una franja central ampliada al doble (ayuda
+     cuando el código del DNI queda chico o lejos). */
+  var vuelta = 0, lienzo = document.createElement("canvas");
+  function franjaAmpliada(v){
+    var w = v.videoWidth, h = v.videoHeight;
+    var sx = w * 0.05, sw = w * 0.9, sh = Math.min(h * 0.45, sw * 0.6), sy = (h - sh) / 2;
+    var k = Math.min(2, 2400 / sw);
+    lienzo.width = Math.round(sw * k); lienzo.height = Math.round(sh * k);
+    var ctx = lienzo.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(v, sx, sy, sw, sh, 0, 0, lienzo.width, lienzo.height);
+    return lienzo;
+  }
+
   function ciclo(){
     if (!buscando) return;
     var v = $("video");
-    if (v.readyState < 2) { setTimeout(ciclo, 150); return; }
-    detector.detect(v).then(function(cs){
+    if (v.readyState < 2 || !v.videoWidth) { setTimeout(ciclo, 150); return; }
+    vuelta++;
+    var fuente = (vuelta % 2 === 0) ? franjaAmpliada(v) : v;
+    detector.detect(fuente).then(function(cs){
       if (!buscando) return;
       if (cs && cs.length) { leido(cs[0].rawValue, cs[0].format); return; }
       setTimeout(ciclo, 120);
