@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Acceso · FOU</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Exo:wght@400;600&display=swap">
+<style>
+  :root{
+    --ink:#111111; --card:#1b1b1b; --line:rgba(244,239,228,0.14);
+    --text:#F4EFE4; --muted:#B0AA9E;
+    --green:#9BEA2E; --green-deep:#6EA71F; --amber:#F5B740; --red:#E0573F;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--ink); color:var(--text); font-family:'Exo',system-ui,sans-serif; font-size:16px; line-height:1.45; }
+  h1,h2,h3{ font-family:'Montserrat',sans-serif; font-weight:800; margin:0; }
+  .wrap{ max-width:520px; margin:0 auto; padding:18px 16px 40px; }
+  header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  header h1{ font-size:20px; }
+  .count{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:14px; color:var(--green); }
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:14px; }
+  label{ display:block; font-size:13px; color:var(--muted); margin:10px 0 6px; }
+  input{ width:100%; padding:13px 14px; border-radius:10px; border:1px solid var(--line); background:#111; color:var(--text); font-size:17px; font-family:inherit; }
+  input:focus{ outline:2px solid var(--green); border-color:transparent; }
+  .btn{ display:block; width:100%; margin-top:12px; padding:15px; border:0; border-radius:10px; cursor:pointer;
+        font-family:'Montserrat',sans-serif; font-weight:800; font-size:16px; }
+  .btn-primary{ background:var(--green); color:var(--ink); }
+  .btn-light{ background:var(--text); color:var(--ink); }
+  .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line); }
+  .row{ display:flex; gap:8px; } .row input{ flex:1; } .row .btn{ width:auto; margin-top:0; padding:13px 16px; }
+  #lector{ width:100%; border-radius:12px; overflow:hidden; margin-top:12px; }
+  .res{ border-radius:14px; padding:18px; margin-bottom:14px; }
+  .res h2{ font-size:24px; }
+  .res p{ margin:6px 0 0; font-size:16px; }
+  .ok{ background:var(--green); color:var(--ink); }
+  .warn{ background:var(--amber); color:var(--ink); }
+  .bad{ background:var(--red); color:#fff; }
+  .lista button{ display:flex; justify-content:space-between; width:100%; text-align:left; margin-top:8px; padding:12px; border-radius:10px;
+                 background:#111; color:var(--text); border:1px solid var(--line); font-family:inherit; font-size:15px; cursor:pointer; }
+  .lista small{ color:var(--muted); }
+  .hidden{ display:none; }
+  .fine{ font-size:12.5px; color:var(--muted); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header><h1>FOU · Acceso</h1><span class="count" id="contador"></span></header>
+
+  <!-- Ingreso del personal -->
+  <section class="card" id="login">
+    <h3>Ingresá para empezar</h3>
+    <label for="pin">PIN</label>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+    <label for="puesto">Puesto (para el registro, ej: Puerta 1)</label>
+    <input id="puesto" type="text" maxlength="30" placeholder="Puerta 1">
+    <button class="btn btn-primary" id="entrar">Entrar</button>
+    <p class="fine" id="loginMsg"></p>
+  </section>
+
+  <main id="app" class="hidden">
+    <div id="resultado"></div>
+
+    <section class="card">
+      <button class="btn btn-primary" id="escanear">Escanear QR o DNI</button>
+      <div id="lector" class="hidden"></div>
+      <button class="btn btn-ghost hidden" id="cancelar">Cerrar cámara</button>
+    </section>
+
+    <section class="card">
+      <label for="dni">¿No tiene QR? Número de DNI</label>
+      <div class="row"><input id="dni" inputmode="numeric" placeholder="12345678"><button class="btn btn-light" id="validarDni">Validar</button></div>
+      <label for="q">¿No tiene QR ni DNI? Buscar por nombre o apellido</label>
+      <div class="row"><input id="q" placeholder="Pérez"><button class="btn btn-light" id="buscar">Buscar</button></div>
+      <div class="lista" id="lista"></div>
+    </section>
+
+    <button class="btn btn-ghost" id="salir">Salir</button>
+  </main>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* URL de la implementación de Apps Script (termina en /exec). Se pega acá una sola vez. */
+  var ACCESO_API = "https://script.google.com/macros/s/AKfycbzmNirBy36kC5BOgh_T01ZBP7b61vXsOeaJbIZfiNFctZntHbyfqn3P3pUjKfZAk6XWtA/exec";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var sesion = { pin:"", puesto:"" };
+  var lector = null, ultimo = null;
+
+  try { sesion.pin = sessionStorage.getItem("fou_pin") || ""; sesion.puesto = sessionStorage.getItem("fou_puesto") || ""; } catch(e){}
+
+  function api(datos){
+    datos.pin = sesion.pin; datos.puesto = sesion.puesto;
+    return fetch(ACCESO_API, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(datos) })
+      .then(function(r){ return r.json(); });
+  }
+
+  function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function mostrar(clase, titulo, texto, extra){
+    $("resultado").innerHTML = '<div class="res ' + clase + '"><h2>' + esc(titulo) + '</h2>' + (texto ? '<p>' + texto + '</p>' : '') + (extra || "") + '</div>';
+    if (navigator.vibrate) navigator.vibrate(clase === "ok" ? 80 : [120, 80, 120]);
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+
+  function nombre(r){ return esc((r.nombre || "") + " " + (r.apellido || "")); }
+
+  function actualizarContador(){
+    api({ a:"stats" }).then(function(r){ if (r.r === "stats") $("contador").textContent = r.ingresados + " / " + r.total; }).catch(function(){});
+  }
+
+  function procesar(r, accion){
+    ultimo = accion;
+    if (r.r === "ok") { mostrar("ok", "Puede pasar", nombre(r) + " · ingreso por " + esc(r.metodo)); }
+    else if (r.r === "ok_forzado") { mostrar("ok", "Puede pasar", nombre(r) + " · reingreso validado con DNI"); }
+    else if (r.r === "duplicado" && accion.a === "dni") {
+      mostrar("warn", "Ya ingresó", nombre(r) + " ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + "). Si el DNI coincide con la persona, podés registrarlo igual.",
+        '<button class="btn btn-light" id="forzar">Registrar igual (DNI verificado)</button>');
+      $("forzar").onclick = function(){ api({ a:"dni", dni:accion.dni, forzar:true }).then(function(x){ procesar(x, accion); actualizarContador(); }); };
+    }
+    else if (r.r === "duplicado") { mostrar("warn", "QR ya usado", "Este QR ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + ") a nombre de " + nombre(r) + ". Pedí el DNI y escanealo o tipealo abajo."); }
+    else if (r.r === "no_existe") { mostrar("bad", "QR no válido", "No corresponde a ninguna entrada. Pedí el DNI."); }
+    else if (r.r === "no_inscripto") { mostrar("bad", "No figura", "DNI terminado en " + esc(r.dni) + " no está en la lista. Probá buscar por apellido o derivá a la organización."); }
+    else if (r.r === "dni_invalido") { mostrar("bad", "DNI no válido", "El número tiene que tener 7 u 8 dígitos."); }
+    else if (r.r === "pin") { cerrarSesion("PIN incorrecto."); }
+    else if (r.r === "bloqueado") { mostrar("bad", "Bloqueado", "Demasiados intentos con PIN incorrecto. Esperá 10 minutos."); }
+    else { mostrar("bad", "Error", esc(r.msg || "Error desconocido")); }
+  }
+
+  function enviar(accion){
+    mostrar("warn", "Verificando…", "");
+    api(accion).then(function(r){ procesar(r, accion); actualizarContador(); })
+      .catch(function(){ mostrar("bad", "Sin conexión", "No se pudo consultar. Revisá los datos móviles y probá de nuevo."); });
+  }
+
+  /* DNI argentino (PDF417). Formato nuevo: tramite@APELLIDO@NOMBRE@SEXO@DNI@...
+     Formato viejo: @DNI@... Solo se usa el número: el resto no sale del celular. */
+  function dniDeCodigo(txt){
+    var p = String(txt).split("@");
+    if (p.length < 5) return null;
+    var d = (p[0] === "" ? p[1] : p[4]) || "";
+    d = d.replace(/\D/g, "");
+    return (d.length >= 7 && d.length <= 8) ? d : null;
+  }
+
+  function leido(txt){
+    detenerCamara();
+    if (/^FOU1:/i.test(txt)) { enviar({ a:"qr", codigo:txt }); return; }
+    var dni = dniDeCodigo(txt);
+    if (dni) { enviar({ a:"dni", dni:dni }); return; }
+    mostrar("bad", "Código no reconocido", "No es un QR de FOU ni un DNI. Probá de nuevo o tipeá el DNI.");
+  }
+
+  function iniciarCamara(){
+    $("lector").classList.remove("hidden"); $("cancelar").classList.remove("hidden"); $("escanear").classList.add("hidden");
+    lector = new Html5Qrcode("lector", {
+      formatsToSupport:[ Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.PDF_417 ],
+      experimentalFeatures:{ useBarCodeDetectorIfSupported:true }, verbose:false });
+    lector.start({ facingMode:"environment" },
+      { fps:10, qrbox:function(w, h){ return { width:Math.floor(w * 0.9), height:Math.floor(h * 0.6) }; } },
+      leido, function(){})
+      .catch(function(){ detenerCamara(); mostrar("bad", "Sin cámara", "Dale permiso a la cámara en el navegador, o tipeá el DNI abajo."); });
+  }
+
+  function detenerCamara(){
+    $("lector").classList.add("hidden"); $("cancelar").classList.add("hidden"); $("escanear").classList.remove("hidden");
+    if (lector) { var l = lector; lector = null; l.stop().then(function(){ l.clear(); }).catch(function(){}); }
+  }
+
+  function cerrarSesion(msg){
+    detenerCamara();
+    sesion.pin = ""; try { sessionStorage.removeItem("fou_pin"); } catch(e){}
+    $("app").classList.add("hidden"); $("login").classList.remove("hidden");
+    $("loginMsg").textContent = msg || "";
+  }
+
+  function entrar(){
+    $("loginMsg").textContent = "Verificando…";
+    api({ a:"stats" }).then(function(r){
+      if (r.r !== "stats") { cerrarSesion(r.r === "bloqueado" ? "Bloqueado por intentos fallidos. Esperá 10 minutos." : "PIN incorrecto."); return; }
+      try { sessionStorage.setItem("fou_pin", sesion.pin); sessionStorage.setItem("fou_puesto", sesion.puesto); } catch(e){}
+      $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+      $("contador").textContent = r.ingresados + " / " + r.total;
+    }).catch(function(){ $("loginMsg").textContent = "No se pudo conectar. Revisá internet y la URL de la API."; });
+  }
+
+  $("entrar").onclick = function(){ sesion.pin = $("pin").value.trim(); sesion.puesto = $("puesto").value.trim(); entrar(); };
+  $("escanear").onclick = iniciarCamara;
+  $("cancelar").onclick = detenerCamara;
+  $("salir").onclick = function(){ cerrarSesion(""); };
+  $("validarDni").onclick = function(){ var d = $("dni").value.replace(/\D/g, ""); $("dni").value = ""; enviar({ a:"dni", dni:d }); };
+  $("buscar").onclick = function(){
+    var q = $("q").value.trim();
+    if (q.length < 3) { $("lista").innerHTML = '<p class="fine">Escribí al menos 3 letras.</p>'; return; }
+    $("lista").innerHTML = '<p class="fine">Buscando…</p>';
+    api({ a:"buscar", q:q }).then(function(r){
+      if (r.r !== "buscar") { procesar(r, {}); return; }
+      if (!r.items.length) { $("lista").innerHTML = '<p class="fine">Sin resultados.</p>'; return; }
+      $("lista").innerHTML = "";
+      r.items.forEach(function(it){
+        var b = document.createElement("button");
+        b.innerHTML = '<span>' + nombre(it) + '<br><small>DNI ' + esc(it.dni) + '</small></span><small>' + (it.ingreso ? "ya ingresó" : "dar ingreso") + '</small>';
+        b.onclick = function(){ $("lista").innerHTML = ""; $("q").value = ""; enviar({ a:"manual", codigo:it.codigo }); };
+        $("lista").appendChild(b);
+      });
+    }).catch(function(){ $("lista").innerHTML = '<p class="fine">Sin conexión.</p>'; });
+  };
+
+  if (sesion.pin) { $("pin").value = sesion.pin; $("puesto").value = sesion.puesto; entrar(); }
+})();
+</script>
+</body>
+</html>
