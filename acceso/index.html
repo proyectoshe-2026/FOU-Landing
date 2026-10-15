@@ -124,6 +124,8 @@
       $("forzar").onclick = function(){ api({ a:"dni", dni:accion.dni, forzar:true }).then(function(x){ procesar(x, accion); actualizarContador(); }); };
     }
     else if (r.r === "duplicado") { mostrar("warn", "QR ya usado", "Este QR ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + ") a nombre de " + nombre(r) + ". Pedí el DNI y escanealo o tipealo abajo."); }
+    else if (r.r === "baja") { mostrar("bad", "Dado de baja", nombre(r) + " ya no figura en la lista de inscriptos. Derivá a la organización."); }
+    else if (r.r === "sin_cupo") { mostrar("bad", "Sin cupo", nombre(r) + " está en lista de espera (sin entrada asignada). Derivá a la organización."); }
     else if (r.r === "no_existe") { mostrar("bad", "QR no válido", "No corresponde a ninguna entrada. Pedí el DNI."); }
     else if (r.r === "no_inscripto") { mostrar("bad", "No figura", "DNI terminado en " + esc(r.dni) + " no está en la lista. Probá buscar por apellido o derivá a la organización."); }
     else if (r.r === "dni_invalido") { mostrar("bad", "DNI no válido", "El número tiene que tener 7 u 8 dígitos."); }
@@ -182,7 +184,12 @@
   function entrar(){
     $("loginMsg").textContent = "Verificando…";
     api({ a:"stats" }).then(function(r){
-      if (r.r !== "stats") { cerrarSesion(r.r === "bloqueado" ? "Bloqueado por intentos fallidos. Esperá 10 minutos." : "PIN incorrecto."); return; }
+      if (r.r !== "stats") {
+        cerrarSesion(r.r === "bloqueado" ? "Bloqueado por intentos fallidos. Esperá 10 minutos."
+          : r.r === "pin" ? "PIN incorrecto (o todavía no se definió desde el menú de la Sheet)."
+          : "Error del servidor: " + (r.msg || r.r));
+        return;
+      }
       try { sessionStorage.setItem("fou_pin", sesion.pin); sessionStorage.setItem("fou_puesto", sesion.puesto); } catch(e){}
       $("login").classList.add("hidden"); $("app").classList.remove("hidden");
       $("contador").textContent = r.ingresados + " / " + r.total;
@@ -204,7 +211,7 @@
       $("lista").innerHTML = "";
       r.items.forEach(function(it){
         var b = document.createElement("button");
-        b.innerHTML = '<span>' + nombre(it) + '<br><small>DNI ' + esc(it.dni) + '</small></span><small>' + (it.ingreso ? "ya ingresó" : "dar ingreso") + '</small>';
+        b.innerHTML = '<span>' + nombre(it) + '<br><small>DNI ' + esc(it.dni) + '</small></span><small>' + (it.estado === "baja" ? "baja" : it.estado === "sin_cupo" ? "sin cupo" : it.ingreso ? "ya ingresó" : "dar ingreso") + '</small>';
         b.onclick = function(){ $("lista").innerHTML = ""; $("q").value = ""; enviar({ a:"manual", codigo:it.codigo }); };
         $("lista").appendChild(b);
       });
