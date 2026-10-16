@@ -28,6 +28,8 @@
   .btn-primary{ background:var(--green); color:var(--ink); }
   .btn-light{ background:var(--text); color:var(--ink); }
   .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line); }
+  .btn-ink{ background:var(--ink); color:var(--text); }
+  .res .btn-ink{ margin-top:14px; }
   .row{ display:flex; gap:8px; } .row input{ flex:1; } .row .btn{ width:auto; margin-top:0; padding:13px 16px; }
   /* Alto fijo: en el celular la cámara viene vertical y, sin tope, el video empujaba los botones
      fuera de la pantalla. El recuadro es ancho y bajo, como el código de barras del DNI. */
@@ -48,6 +50,12 @@
   .lista small{ color:var(--muted); }
   .hidden{ display:none; }
   .fine{ font-size:12.5px; color:var(--muted); margin-top:10px; }
+  .card h3{ font-size:15px; margin-bottom:2px; }
+  .card h3 small{ font-family:'Exo',sans-serif; font-weight:400; color:var(--muted); font-size:12.5px; }
+  select{ width:100%; padding:13px 14px; border-radius:10px; border:1px solid var(--line); background:#111; color:var(--text); font-size:16px; font-family:inherit; }
+  .check{ display:flex; gap:10px; align-items:flex-start; margin-top:14px; font-size:14px; color:var(--text); }
+  .check input{ width:22px; height:22px; flex:none; margin:1px 0 0; accent-color:var(--green); }
+  #alta{ border-color:var(--green); }
 </style>
 </head>
 <body>
@@ -70,24 +78,52 @@
     <div id="resultado"></div>
 
     <section class="card">
-      <button class="btn btn-primary" id="escanear">Escanear QR o DNI</button>
+      <!-- Las dos opciones usan la cámara nativa del celular (foto): no depende de permisos
+           de cámara del navegador ni de que otra app la tenga tomada. -->
+      <label class="btn btn-primary" for="fotoQr" style="text-align:center">Escanear QR</label>
+      <input id="fotoQr" type="file" accept="image/*" capture="environment" class="hidden">
+      <p class="tips">Se abre la cámara del celular: sacá la foto del QR (que ocupe buena parte de la foto) y confirmala.</p>
+      <button class="btn btn-primary hidden" id="escanear">Escaneo en vivo</button>
       <div id="lector" class="hidden"><video id="video" playsinline muted></video><div class="guia"></div><div class="estado" id="estadoCam">Buscando código…</div></div>
-      <p class="tips hidden" id="tips">DNI: apuntá al código de barras del frente (el rectángulo de rayitas) y acercalo hasta que ocupe todo el ancho del recuadro. Buena luz y sin reflejos.</p>
+      <p class="tips hidden" id="tips">Apuntá al QR del mail (en el celular de la persona o impreso). Pedile que suba el brillo de la pantalla.</p>
       <div class="acciones hidden" id="acciones">
         <button class="btn btn-ghost" id="linterna">Linterna</button>
         <button class="btn btn-ghost" id="cancelar">Cerrar cámara</button>
       </div>
-      <label class="btn btn-light" for="foto" style="text-align:center">Sacar foto del DNI</label>
+      <label class="btn btn-light" for="foto" style="text-align:center; margin-top:16px">Sin QR: sacar foto del DNI</label>
       <input id="foto" type="file" accept="image/*" capture="environment" class="hidden">
-      <p class="tips">Si el escaneo en vivo no lee el DNI, la foto suele funcionar mejor: el celular enfoca y usa la cámara a máxima calidad.</p>
+      <p class="tips">Foto del código de barras del frente del DNI, de cerca, derecha y sin reflejos.</p>
     </section>
 
     <section class="card">
-      <label for="dni">¿No tiene QR? Número de DNI</label>
+      <h3>Último recurso <small>si no hay QR ni se lee el DNI</small></h3>
+      <label for="dni">Tipear el número de DNI</label>
       <div class="row"><input id="dni" inputmode="numeric" placeholder="12345678"><button class="btn btn-light" id="validarDni">Validar</button></div>
-      <label for="q">¿No tiene QR ni DNI? Buscar por nombre o apellido</label>
+      <label for="q">Buscar por nombre o apellido</label>
       <div class="row"><input id="q" placeholder="Pérez"><button class="btn btn-light" id="buscar">Buscar</button></div>
       <div class="lista" id="lista"></div>
+      <button class="btn btn-ghost" id="abrirAlta">No figura: registrar en puerta</button>
+    </section>
+
+    <!-- Alta en puerta: solo con autorización de la organización -->
+    <section class="card hidden" id="alta">
+      <h3>Registrar en puerta</h3>
+      <p class="fine" style="margin-top:4px">Para quien no figura en la lista (se inscribió a último momento, pagó y no mandó el comprobante, o estaba sin cupo). Solo con autorización de la organización.</p>
+      <label for="altaNombre">Nombre</label><input id="altaNombre" maxlength="60" autocomplete="off">
+      <label for="altaApellido">Apellido</label><input id="altaApellido" maxlength="60" autocomplete="off">
+      <label for="altaDni">DNI</label><input id="altaDni" inputmode="numeric" maxlength="10" autocomplete="off">
+      <label for="altaMail">Mail (opcional)</label><input id="altaMail" type="email" maxlength="120" autocomplete="off">
+      <label for="altaMotivo">Motivo</label>
+      <select id="altaMotivo">
+        <option>Pagó y no mandó el comprobante</option>
+        <option>Se inscribió a último momento</option>
+        <option>Estaba sin cupo (lista de espera)</option>
+        <option>Otro (lo decide la organización)</option>
+      </select>
+      <label class="check"><input type="checkbox" id="altaAut"><span>La organización autorizó el ingreso (verificó el pago o lo decidió).</span></label>
+      <button class="btn btn-primary" id="altaOk">Registrar y dar ingreso</button>
+      <button class="btn btn-ghost" id="altaCancelar">Cancelar</button>
+      <p class="fine" id="altaMsg"></p>
     </section>
 
     <button class="btn btn-ghost" id="salir">Salir</button>
@@ -116,8 +152,12 @@
 
   function esc(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
 
+  /* Todo resultado final trae "Escanear siguiente": limpia la pantalla y abre la cámara de
+     nuevo, sin volver a entrar ni buscar el botón. */
   function mostrar(clase, titulo, texto, extra){
-    $("resultado").innerHTML = '<div class="res ' + clase + '"><h2>' + esc(titulo) + '</h2>' + (texto ? '<p>' + texto + '</p>' : '') + (extra || "") + '</div>';
+    var final = !/…$/.test(titulo);
+    $("resultado").innerHTML = '<div class="res ' + clase + '"><h2>' + esc(titulo) + '</h2>' + (texto ? '<p>' + texto + '</p>' : '') + (extra || "") +
+      (final ? '<label class="btn btn-ink" for="fotoQr" id="siguiente" style="text-align:center">Escanear siguiente QR</label>' : '') + '</div>';
     if (navigator.vibrate) navigator.vibrate(clase === "ok" ? 80 : [120, 80, 120]);
     window.scrollTo({ top:0, behavior:"smooth" });
   }
@@ -130,22 +170,54 @@
 
   function procesar(r, accion){
     ultimo = accion;
+    var botonAlta = '<button class="btn btn-light" id="irAlta">Registrar en puerta</button>';
     if (r.r === "ok") { mostrar("ok", "Puede pasar", nombre(r) + " · ingreso por " + esc(r.metodo)); }
+    else if (r.r === "ok_alta") { mostrar("ok", "Puede pasar", nombre(r) + " · alta en puerta registrada"); }
+    else if (r.r === "alta_incompleta") { mostrar("bad", "Faltan datos", "Completá nombre, apellido y DNI, y marcá la autorización de la organización."); abrirAlta({}); return; }
     else if (r.r === "ok_forzado") { mostrar("ok", "Puede pasar", nombre(r) + " · reingreso validado con DNI"); }
     else if (r.r === "duplicado" && accion.a === "dni") {
       mostrar("warn", "Ya ingresó", nombre(r) + " ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + "). Si el DNI coincide con la persona, podés registrarlo igual.",
         '<button class="btn btn-light" id="forzar">Registrar igual (DNI verificado)</button>');
       $("forzar").onclick = function(){ api({ a:"dni", dni:accion.dni, forzar:true }).then(function(x){ procesar(x, accion); actualizarContador(); }); };
     }
-    else if (r.r === "duplicado") { mostrar("warn", "QR ya usado", "Este QR ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + ") a nombre de " + nombre(r) + ". Pedí el DNI y escanealo o tipealo abajo."); }
-    else if (r.r === "baja") { mostrar("bad", "Dado de baja", nombre(r) + " ya no figura en la lista de inscriptos. Derivá a la organización."); }
-    else if (r.r === "sin_cupo") { mostrar("bad", "Sin cupo", nombre(r) + " está en lista de espera (sin entrada asignada). Derivá a la organización."); }
-    else if (r.r === "no_existe") { mostrar("bad", "QR no válido", "No corresponde a ninguna entrada. Pedí el DNI."); }
-    else if (r.r === "no_inscripto") { mostrar("bad", "No figura", "DNI terminado en " + esc(r.dni) + " no está en la lista. Probá buscar por apellido o derivá a la organización."); }
+    else if (r.r === "duplicado") { mostrar("warn", "QR ya usado", "Este QR ya ingresó a las " + esc(r.hora) + " (" + esc(r.metodo) + ") a nombre de " + nombre(r) + ". Pedí el DNI y sacale una foto. Si no lee, derivá a contingencia."); }
+    else if (r.r === "baja") { mostrar("bad", "Dado de baja", nombre(r) + " ya no figura en la lista de inscriptos. Derivá a contingencia.", botonAlta); prepararIrAlta(r, accion); }
+    else if (r.r === "sin_cupo") { mostrar("bad", "Sin cupo", nombre(r) + " está en lista de espera (sin entrada asignada). Derivá a contingencia.", botonAlta); prepararIrAlta(r, accion); }
+    else if (r.r === "no_existe") { mostrar("bad", "QR no válido", "No corresponde a ninguna entrada. Pedí el DNI y sacale una foto."); }
+    else if (r.r === "no_inscripto") { mostrar("bad", "No figura", "DNI terminado en " + esc(r.dni) + " no está en la lista. Derivá a contingencia.", botonAlta); prepararIrAlta(r, accion); }
     else if (r.r === "dni_invalido") { mostrar("bad", "DNI no válido", "El número tiene que tener 7 u 8 dígitos."); }
     else if (r.r === "pin") { cerrarSesion("PIN incorrecto."); }
     else if (r.r === "bloqueado") { mostrar("bad", "Bloqueado", "Demasiados intentos con PIN incorrecto. Esperá 10 minutos."); }
     else { mostrar("bad", "Error", esc(r.msg || "Error desconocido")); }
+  }
+
+  function prepararIrAlta(r, accion){
+    $("irAlta").onclick = function(){ abrirAlta({ nombre:r.nombre, apellido:r.apellido, dni:accion && accion.dni }); };
+  }
+
+  function abrirAlta(pre){
+    detenerCamara();
+    if (pre.nombre !== undefined || pre.dni) {
+      $("altaNombre").value = pre.nombre || ""; $("altaApellido").value = pre.apellido || "";
+      $("altaDni").value = pre.dni || ""; $("altaMail").value = ""; $("altaAut").checked = false;
+      $("altaMotivo").selectedIndex = 0;
+    }
+    $("altaMsg").textContent = "";
+    $("alta").classList.remove("hidden");
+    $("alta").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  function cerrarAlta(){ $("alta").classList.add("hidden"); }
+
+  function enviarAlta(){
+    var d = { a:"alta", nombre:$("altaNombre").value.trim(), apellido:$("altaApellido").value.trim(),
+      dni:$("altaDni").value.replace(/\D/g, ""), mail:$("altaMail").value.trim(),
+      motivo:$("altaMotivo").value, autorizado:$("altaAut").checked };
+    if (!d.nombre || !d.apellido) { $("altaMsg").textContent = "Completá nombre y apellido."; return; }
+    if (d.dni.length < 7 || d.dni.length > 8) { $("altaMsg").textContent = "El DNI tiene que tener 7 u 8 números."; return; }
+    if (!d.autorizado) { $("altaMsg").textContent = "Marcá que la organización autorizó el ingreso."; return; }
+    cerrarAlta();
+    enviar(d);
   }
 
   function enviar(accion){
@@ -193,28 +265,76 @@
     });
   }
 
+  /* Pide la cámara probando de lo más exigente a lo más simple: algunos celulares
+     rechazan la resolución alta o la cámara trasera "exacta". */
+  var INTENTOS_CAMARA = [
+    { audio:false, video:{ facingMode:{ ideal:"environment" }, width:{ ideal:1920 }, height:{ ideal:1080 } } },
+    { audio:false, video:{ facingMode:{ ideal:"environment" } } },
+    { audio:false, video:true }
+  ];
+  function pedirCamara(i, ultimoError){
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      var e = new Error("El navegador no da acceso a la cámara en esta página"); e.name = "SinSoporte";
+      return Promise.reject(e);
+    }
+    if (i >= INTENTOS_CAMARA.length) return Promise.reject(ultimoError);
+    return navigator.mediaDevices.getUserMedia(INTENTOS_CAMARA[i]).catch(function(e){
+      /* Si el permiso está bloqueado no tiene sentido reintentar */
+      if (e && (e.name === "NotAllowedError" || e.name === "SecurityError")) throw e;
+      return pedirCamara(i + 1, e);
+    });
+  }
+
+  function explicarError(e){
+    var n = (e && e.name) || "Error";
+    var txt = {
+      NotAllowedError: "El navegador bloqueó la cámara para esta página. Tocá el candado al lado de la dirección > Permisos > Cámara > Permitir, y recargá.",
+      NotReadableError: "La cámara está ocupada. Cerrá las otras pestañas de esta página y las apps que usen la cámara (WhatsApp, Instagram, cámara), y probá de nuevo.",
+      AbortError: "La cámara está ocupada. Cerrá las otras pestañas de esta página y las apps que usen la cámara, y probá de nuevo.",
+      NotFoundError: "No se encontró ninguna cámara en este equipo.",
+      OverconstrainedError: "La cámara no aceptó la configuración pedida.",
+      SecurityError: "La página tiene que abrirse con https para usar la cámara.",
+      SinSoporte: "Este navegador no da acceso a la cámara. Abrí la página en Chrome."
+    }[n] || "No se pudo abrir la cámara.";
+    return txt + " Mientras tanto, usá \"Sacar foto del DNI\" o tipeá el número. (Detalle: " + esc(n + (e && e.message ? ": " + e.message : "")) + ")";
+  }
+
+  var abriendo = false;
   function iniciarCamara(){
+    if (abriendo) return;
+    abriendo = true;
+    $("resultado").innerHTML = "";
+    if (stream) { stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
     $("lector").classList.remove("hidden"); $("acciones").classList.remove("hidden"); $("tips").classList.remove("hidden");
     $("escanear").classList.add("hidden");
-    obtenerDetector().then(function(){
-      return navigator.mediaDevices.getUserMedia({ audio:false, video:{
-        facingMode:{ ideal:"environment" }, width:{ ideal:1920 }, height:{ ideal:1080 } } });
-    }).then(function(s){
+    $("estadoCam").textContent = "Abriendo cámara…";
+    /* La cámara se pide primero, directo desde el toque del botón */
+    pedirCamara(0).then(function(s){
       stream = s;
       var track = s.getVideoTracks()[0];
       try { track.applyConstraints({ advanced:[{ focusMode:"continuous" }] }).catch(function(){}); } catch(e){}
-      var caps = track.getCapabilities ? track.getCapabilities() : {};
+      var caps = {};
+      try { caps = track.getCapabilities ? track.getCapabilities() : {}; } catch(e){}
       $("linterna").classList.toggle("hidden", !caps.torch);
-      var v = $("video"); v.srcObject = s;
-      return v.play();
+      var v = $("video");
+      v.setAttribute("playsinline", ""); v.setAttribute("autoplay", ""); v.muted = true;
+      v.srcObject = s;
+      try { var pr = v.play(); if (pr && pr.catch) pr.catch(function(){}); } catch(e){}
+      return obtenerDetector();
     }).then(function(){
+      abriendo = false;
+      $("estadoCam").textContent = "Buscando código…";
       buscando = true; ciclo();
-      $("lector").scrollIntoView({ behavior:"smooth", block:"start" });
-    })
-      .catch(function(e){
-        detenerCamara();
-        mostrar("bad", "Sin cámara", e && e.message === "sin lector" ? "No se pudo cargar el lector. Revisá la conexión y recargá la página." : "Dale permiso a la cámara en el navegador, o usá \"Sacar foto del DNI\" o tipeá el número.");
-      });
+      try { $("lector").scrollIntoView({ behavior:"smooth", block:"start" }); } catch(e){}
+    }).catch(function(e){
+      abriendo = false;
+      detenerCamara();
+      if (e && e.message === "sin lector") {
+        mostrar("bad", "Sin lector", "No se pudo cargar el lector de códigos. Revisá la conexión y recargá la página. Mientras tanto, tipeá el DNI.");
+      } else {
+        mostrar("bad", "Sin cámara", explicarError(e));
+      }
+    });
   }
 
   /* Vueltas alternadas: cuadro completo, y una franja central ampliada al doble (ayuda
@@ -247,7 +367,6 @@
   function detenerCamara(){
     buscando = false;
     $("lector").classList.add("hidden"); $("acciones").classList.add("hidden"); $("tips").classList.add("hidden");
-    $("escanear").classList.remove("hidden");
     if (stream) { stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
     linterna = false;
   }
@@ -258,19 +377,48 @@
     stream.getVideoTracks()[0].applyConstraints({ advanced:[{ torch:linterna }] }).catch(function(){});
   }
 
-  function leerFoto(file){
+  /* Lee la foto: primero achicada (rápido, alcanza para el QR) y, si no encuentra nada,
+     a resolución completa (el código del DNI necesita detalle). */
+  function detectarEn(d, img){
+    var max = Math.max(img.width, img.height);
+    if (max <= 1600) return d.detect(img);
+    var k = 1600 / max, cv = document.createElement("canvas");
+    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+    return d.detect(cv).then(function(cs){ return (cs && cs.length) ? cs : d.detect(img); });
+  }
+
+  function leerFoto(file, tipo){
     if (!file) return;
     mostrar("warn", "Leyendo la foto…", "");
-    obtenerDetector().then(function(d){ return createImageBitmap(file).then(function(img){ return d.detect(img); }); })
+    obtenerDetector().then(function(d){ return createImageBitmap(file).then(function(img){ return detectarEn(d, img); }); })
       .then(function(cs){
         if (cs && cs.length) { leido(cs[0].rawValue, cs[0].format); return; }
-        mostrar("bad", "No se encontró el código", "Sacá la foto más cerca del código de barras del frente del DNI, derecha, con buena luz y sin reflejos. Si no sale, tipeá el número.");
+        if (tipo === "qr") mostrar("bad", "No se encontró el QR", "Sacá la foto de nuevo, más cerca, derecha y sin reflejos. Si no sale, pedí el DNI y sacale una foto.");
+        else mostrar("bad", "No se encontró el código", "Sacá la foto más cerca del código de barras del frente del DNI, derecha, con buena luz y sin reflejos. Si no sale, derivá a contingencia.");
       })
-      .catch(function(){ mostrar("bad", "No se pudo leer la foto", "Probá de nuevo o tipeá el número de DNI."); });
+      .catch(function(e){
+        if (e && e.message === "sin lector") mostrar("bad", "Sin lector", "No se pudo cargar el lector de códigos. Revisá la conexión y recargá la página.");
+        else mostrar("bad", "No se pudo leer la foto", "Probá de nuevo. Si no sale, derivá a contingencia.");
+      });
   }
+
+  /* Pantalla siempre encendida mientras la página está abierta (si el celular lo permite),
+     para no tener que desbloquear entre una persona y la siguiente. */
+  var pantalla = null;
+  function mantenerPantalla(){
+    try {
+      if ("wakeLock" in navigator && document.visibilityState === "visible")
+        navigator.wakeLock.request("screen").then(function(w){ pantalla = w; }).catch(function(){});
+    } catch(e){}
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible" && !$("app").classList.contains("hidden")) mantenerPantalla();
+  });
 
   function cerrarSesion(msg){
     detenerCamara();
+    try { if (pantalla) pantalla.release(); } catch(e){} pantalla = null;
     sesion.pin = ""; try { sessionStorage.removeItem("fou_pin"); } catch(e){}
     $("app").classList.add("hidden"); $("login").classList.remove("hidden");
     $("loginMsg").textContent = msg || "";
@@ -287,6 +435,7 @@
       }
       try { sessionStorage.setItem("fou_pin", sesion.pin); sessionStorage.setItem("fou_puesto", sesion.puesto); } catch(e){}
       $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+      mantenerPantalla();
       $("contador").textContent = r.ingresados + " / " + r.total;
     }).catch(function(){ $("loginMsg").textContent = "No se pudo conectar. Revisá internet y la URL de la API."; });
   }
@@ -295,8 +444,12 @@
   $("escanear").onclick = iniciarCamara;
   $("cancelar").onclick = detenerCamara;
   $("linterna").onclick = alternarLinterna;
-  $("foto").onchange = function(){ var f = this.files && this.files[0]; this.value = ""; leerFoto(f); };
+  $("foto").onchange = function(){ var f = this.files && this.files[0]; this.value = ""; leerFoto(f, "dni"); };
+  $("fotoQr").onchange = function(){ var f = this.files && this.files[0]; this.value = ""; leerFoto(f, "qr"); };
   $("salir").onclick = function(){ cerrarSesion(""); };
+  $("abrirAlta").onclick = function(){ abrirAlta({ nombre:"", apellido:"", dni:$("dni").value.replace(/\D/g, "") }); };
+  $("altaOk").onclick = enviarAlta;
+  $("altaCancelar").onclick = cerrarAlta;
   $("validarDni").onclick = function(){ var d = $("dni").value.replace(/\D/g, ""); $("dni").value = ""; enviar({ a:"dni", dni:d }); };
   $("buscar").onclick = function(){
     var q = $("q").value.trim();
@@ -304,7 +457,7 @@
     $("lista").innerHTML = '<p class="fine">Buscando…</p>';
     api({ a:"buscar", q:q }).then(function(r){
       if (r.r !== "buscar") { procesar(r, {}); return; }
-      if (!r.items.length) { $("lista").innerHTML = '<p class="fine">Sin resultados.</p>'; return; }
+      if (!r.items.length) { $("lista").innerHTML = '<p class="fine">Sin resultados. Si la organización lo autoriza, usá "No figura: registrar en puerta".</p>'; return; }
       $("lista").innerHTML = "";
       r.items.forEach(function(it){
         var b = document.createElement("button");
