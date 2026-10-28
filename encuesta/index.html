@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Encuesta Capacitaciones FOU</title>
+<meta name="description" content="Contanos cómo te fue en la capacitación. Te lleva menos de 2 minutos.">
+<meta name="theme-color" content="#1F4E85">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="fou-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800&family=Fira+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* identidad FOU: --green #9BEA2E, --green-deep #6EA71F, --blue-deep #1F4E85 */
+  :root { --blue:#1F4E85; --blue-dark:#163a64; --blue-soft:#eef3fb; --lime:#9BEA2E; --green-deep:#6EA71F;
+          --ink:#111111; --muted:#3a4a6b; --line:#dde3ee; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { min-height:100%; }
+  body { background:#fff; font-family:'Fira Sans', sans-serif; color:var(--ink);
+         display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; }
+  [hidden] { display:none !important; }
+  button { font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+
+  /* --- cabecera azul con patrón --- */
+  .top { position:relative; overflow:hidden; color:#fff; padding:28px 20px 26px;
+    background:
+      radial-gradient(circle at 90% 15%, rgba(155,234,46,.18), transparent 40%),
+      linear-gradient(160deg, #2a62a3 0%, var(--blue) 50%, var(--blue-dark) 100%); }
+  .top::before { content:''; position:absolute; inset:0; opacity:.2;
+    background:url(fou-patron.png) -20px -14px / 210px auto repeat; }
+  .top > * { position:relative; max-width:560px; margin:0 auto; }
+  .logo { display:block; height:34px; margin-left:-14px; filter:brightness(0) invert(1); }
+  .jornada { margin-top:16px; font-family:'Lexend'; font-weight:800; line-height:1; }
+  .jornada small { display:block; font-weight:700; font-size:16px; }
+  .jornada b { display:block; margin-top:4px; font-size:34px; letter-spacing:-.5px; color:var(--lime); }
+  .jornada b:empty { display:none; }
+
+  /* --- barra de progreso --- */
+  .progress { height:6px; background:var(--blue-soft); }
+  .progress i { display:block; height:100%; width:0; background:var(--lime); transition:width .35s ease; }
+
+  /* --- contenido --- */
+  main { flex:1; position:relative; width:100%; max-width:560px; margin:0 auto; padding:28px 20px 24px; }
+  main::before { content:''; position:fixed; inset:0; z-index:-1; opacity:.07; pointer-events:none;
+    background:url(fou-patron.png) 0 0 / 210px auto repeat; }
+  .step { display:none; animation:in .35s ease both; }
+  .step.on { display:block; }
+  .step.back { animation-name:inBack; }
+  @keyframes in { from { opacity:0; transform:translateX(24px); } to { opacity:1; transform:none; } }
+  @keyframes inBack { from { opacity:0; transform:translateX(-24px); } to { opacity:1; transform:none; } }
+  @media (prefers-reduced-motion:reduce) { .step, .progress i { animation:none; transition:none; } }
+
+  .eyebrow { font-family:'Lexend'; font-weight:700; font-size:12px; letter-spacing:3px;
+    text-transform:uppercase; color:var(--blue); }
+  h1, h2 { font-family:'Lexend'; font-weight:800; color:var(--blue-dark); letter-spacing:-.3px; }
+  h1 { font-size:28px; line-height:1.12; margin-top:10px; }
+  h2 { font-size:23px; line-height:1.2; margin-top:10px; }
+  h1 em, h2 em { font-style:normal; background:var(--lime); padding:0 6px; border-radius:6px;
+    -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+  .lead { margin-top:14px; font-size:17px; line-height:1.45; color:var(--muted); }
+
+  .time { display:inline-flex; align-items:center; gap:8px; margin-top:20px; padding:8px 14px;
+    border-radius:999px; background:var(--blue-soft); color:var(--blue-dark); font-weight:600; font-size:15px; }
+  .time svg { width:18px; height:18px; flex-shrink:0; }
+
+  .pick { margin-top:24px; }
+  .pick p { font-weight:600; font-size:15px; color:var(--blue-dark); margin-bottom:10px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { padding:10px 16px; border-radius:999px; border:2px solid var(--line); background:#fff;
+    font-weight:600; font-size:15px; color:var(--blue-dark); transition:all .15s; }
+  .chip[aria-pressed=true] { border-color:var(--blue); background:var(--blue); color:#fff; }
+
+  /* --- escala 1 a 5 --- */
+  .scale { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-top:26px; }
+  .scale button { aspect-ratio:1; max-height:64px; border-radius:16px; border:2px solid var(--line);
+    background:#fff; font-family:'Lexend'; font-weight:800; font-size:22px; color:var(--blue-dark);
+    transition:transform .12s, background .15s, border-color .15s; }
+  .scale button:hover { border-color:var(--blue); }
+  .scale button:active { transform:scale(.94); }
+  .scale button[aria-checked=true] { background:var(--lime); border-color:var(--lime); color:var(--blue-dark);
+    box-shadow:0 6px 16px -6px rgba(110,167,31,.7); }
+  .ends { display:flex; justify-content:space-between; gap:16px; margin-top:10px;
+    font-size:14px; line-height:1.3; color:var(--muted); }
+  .ends span:last-child { text-align:right; }
+
+  /* --- grilla de aspectos --- */
+  .grid { margin-top:22px; display:flex; flex-direction:column; gap:12px; }
+  .row { padding:16px 14px 14px; border-radius:16px; background:var(--blue-soft); }
+  .row h3 { font-family:'Lexend'; font-weight:700; font-size:17px; color:var(--blue-dark); }
+  .row h3 small { display:block; margin-top:2px; font-family:'Fira Sans'; font-weight:400; font-size:14px; color:var(--muted); }
+  .row .scale { margin-top:12px; gap:6px; }
+  .row .scale button { max-height:48px; border-radius:12px; font-size:18px; }
+  .grid-ends { display:flex; justify-content:space-between; margin-top:12px; font-size:14px; color:var(--muted); }
+
+  textarea { width:100%; min-height:130px; margin-top:20px; padding:14px; border-radius:16px;
+    border:2px solid var(--line); font:inherit; font-size:16px; line-height:1.45; resize:vertical; color:var(--ink); }
+  textarea:focus { outline:none; border-color:var(--blue); }
+
+  /* --- navegación --- */
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:28px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; padding:0 26px;
+    border-radius:999px; background:var(--blue); color:#fff; font-family:'Lexend'; font-weight:700; font-size:17px; text-decoration:none;
+    transition:opacity .15s, transform .12s; }
+  .btn:active { transform:scale(.97); }
+  .btn:disabled { opacity:.35; cursor:not-allowed; }
+  .btn.full { width:100%; }
+  .btn.lime { background:var(--lime); color:var(--blue-dark); }
+  .link { padding:12px 4px; font-weight:600; font-size:15px; color:var(--muted); }
+  .count { font-size:14px; font-weight:600; color:var(--muted); }
+  .err { margin-top:14px; font-size:15px; color:#b42318; }
+  .btn:focus-visible, .chip:focus-visible, .scale button:focus-visible, .link:focus-visible {
+    outline:3px solid var(--lime); outline-offset:2px; }
+
+  /* --- gracias --- */
+  .done { text-align:center; padding-top:20px; }
+  .check { width:84px; height:84px; margin:0 auto 18px; border-radius:50%; background:var(--lime);
+    display:grid; place-items:center; animation:pop .5s cubic-bezier(.2,1.6,.4,1) both; }
+  .check svg { width:42px; height:42px; }
+  @keyframes pop { from { transform:scale(.4); opacity:0; } to { transform:none; opacity:1; } }
+
+  /* --- pie --- */
+  footer { padding:18px 20px calc(18px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:#fff; }
+  .prod { display:flex; align-items:center; justify-content:center; gap:12px; text-decoration:none;
+    color:var(--muted); font-weight:500; font-size:15px; }
+  .prod img { height:44px; }
+  .prod:hover span { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <img class="logo" src="fou-logo.png" alt="FOU">
+    <div class="jornada"><small>Capacitación</small><b id="jornadaTitulo"></b></div>
+  </div>
+</header>
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+<main>
+  <form id="form" novalidate>
+
+    <!-- 0 · bienvenida -->
+    <section class="step on" data-step="0">
+      <div class="eyebrow">Encuesta de satisfacción</div>
+      <h1>¿Qué te parecieron las <em>capacitaciones</em> de FOU?</h1>
+      <p class="lead">Tu opinión nos ayuda a que cada capacitación sea mejor que la anterior. Son 5 preguntas, del 1 al 5.</p>
+      <div class="time">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Te lleva menos de 2 minutos
+      </div>
+      <div class="pick" id="pick" hidden>
+        <p>¿A qué capacitación fuiste?</p>
+        <div class="chips" id="chips"></div>
+      </div>
+      <p class="err" id="sinLink" hidden>Para responder, abrí la encuesta desde el botón del mail que te mandamos. El link es personal.</p>
+      <div class="nav"><button type="button" class="btn full" id="start">Empezar</button></div>
+    </section>
+
+    <!-- 1 -->
+    <section class="step" data-step="1">
+      <div class="eyebrow">Pregunta 1 de 5</div>
+      <h2>¿Cuánto aportó esta capacitación a tu formación profesional?</h2>
+      <div class="scale" role="radiogroup" data-name="aporte" aria-label="Aporte a tu formación profesional"></div>
+      <div class="ends"><span>1 · Muy poco</span><span>5 · Mucho</span></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="step" data-step="2">
+      <div class="eyebrow">Pregunta 2 de 5</div>
+      <h2>¿Qué tan aplicable es lo que aprendiste a tu trabajo o práctica diaria?</h2>
+      <div class="scale" role="radiogroup" data-name="aplicabilidad" aria-label="Aplicabilidad"></div>
+      <div class="ends"><span>1 · Nada aplicable</span><span>5 · Lo puedo aplicar de inmediato</span></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="step" data-step="3">
+      <div class="eyebrow">Pregunta 3 de 5</div>
+      <h2>¿Qué tan probable es que recomiendes esta capacitación a un colega?</h2>
+      <div class="scale" role="radiogroup" data-name="recomendacion" aria-label="Recomendación"></div>
+      <div class="ends"><span>1 · Nada probable</span><span>5 · Muy probable</span></div>
+    </section>
+
+    <!-- 4 · grilla -->
+    <section class="step" data-step="4">
+      <div class="eyebrow">Pregunta 4 de 5</div>
+      <h2>Calificá cada aspecto del evento</h2>
+      <div class="grid-ends"><span>1 · Muy malo</span><span>5 · Excelente</span></div>
+      <div class="grid">
+        <div class="row"><h3>Acreditación<small>Rapidez, orden y atención</small></h3>
+          <div class="scale" role="radiogroup" data-name="acreditacion" aria-label="Acreditación"></div></div>
+        <div class="row"><h3>Catering<small>Calidad, cantidad y variedad</small></h3>
+          <div class="scale" role="radiogroup" data-name="catering" aria-label="Catering"></div></div>
+        <div class="row"><h3>Música y ambientación</h3>
+          <div class="scale" role="radiogroup" data-name="musica" aria-label="Música y ambientación"></div></div>
+        <div class="row"><h3>Conducción<small>Ritmo, claridad y presencia</small></h3>
+          <div class="scale" role="radiogroup" data-name="conduccion" aria-label="Conducción"></div></div>
+      </div>
+      <div class="nav">
+        <span class="count" id="gridCount">0 de 4</span>
+        <button type="button" class="btn" id="gridNext" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="step" data-step="5">
+      <div class="eyebrow">Pregunta 5 de 5</div>
+      <h2>¿En qué medida la capacitación cumplió tus expectativas?</h2>
+      <div class="scale" role="radiogroup" data-name="expectativas" aria-label="Expectativas"></div>
+      <div class="ends"><span>1 · Nada</span><span>5 · Las superó</span></div>
+    </section>
+
+    <!-- 6 · comentario opcional -->
+    <section class="step" data-step="6">
+      <div class="eyebrow">Último paso · opcional</div>
+      <h2>¿Algo más que quieras contarnos?</h2>
+      <p class="lead">Lo que más te gustó, lo que mejorarías o un tema para la próxima.</p>
+      <textarea id="comentario" maxlength="1500" placeholder="Escribí acá (opcional)"></textarea>
+      <div class="nav"><button type="submit" class="btn full lime" id="send">Enviar encuesta</button></div>
+      <p class="err" id="err" role="alert" hidden></p>
+    </section>
+
+    <!-- 7 · gracias -->
+    <section class="step done" data-step="7">
+      <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#163a64" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h1>¡<em>Gracias</em>!</h1>
+      <p class="lead" id="graciasTexto">Recibimos tus respuestas. Nos vemos en la próxima capacitación.</p>
+      <div class="nav"><a class="btn full" href="https://capacitaciones.fou.com.ar">Ver próximas capacitaciones</a></div>
+    </section>
+
+    <div class="nav" id="back-nav" hidden>
+      <button type="button" class="link" id="back">← Anterior</button>
+    </div>
+  </form>
+</main>
+
+<footer>
+  <a class="prod" href="https://www.proyectoshe.com" target="_blank" rel="noopener">
+    <span>Evento producido por</span>
+    <img src="she-logo.png" alt="Proyecto SHE">
+  </a>
+</footer>
+
+<script>
+  // URL /exec de la aplicación web "FOU Acreditaciones" (cuenta fouacreditaciones@gmail.com)
+  const ENDPOINT = 'https://script.google.com/macros/s/AKfycbyGz3nAOoQBXlQ9G1-7ZDXllSy3B7BHMRx52A4f3lTGNVzx1vXFH1lYykH0PM_vyxPtFA/exec';
+
+  // capacitaciones disponibles: el link ?jornada=kinesiologia fija la capacitación
+  const JORNADAS = { kinesiologia:'Kinesiología', nutricion:'Nutrición', psicologia:'Psicología' };
+
+  const $ = s => document.querySelector(s);
+  const steps = [...document.querySelectorAll('.step')];
+  const LAST_Q = 6, DONE = 7;
+  const answers = {};
+  let current = 0;
+
+  // capacitación: desde el link o elegida en la bienvenida
+  const qs = new URLSearchParams(location.search);
+  const param = qs.get('jornada');
+  // código personal de un solo uso que llega en el link del mail (lo firma FOU Acreditaciones)
+  const token = /^[A-Za-z0-9]{16}\.[A-Za-z0-9_-]{22}$/.test(qs.get('t') || '') ? qs.get('t') : '';
+  const yaEnviada = () => { try { return localStorage.getItem('encuesta-fou:' + token) === '1'; } catch { return false; } };
+  const marcarEnviada = () => { try { localStorage.setItem('encuesta-fou:' + token, '1'); } catch {} };
+  let jornada = JORNADAS[param?.toLowerCase()] || '';
+  const setJornada = j => { jornada = j; $('#jornadaTitulo').textContent = j; $('#start').disabled = !j; };
+  if (jornada) setJornada(jornada);
+  else {
+    $('#pick').hidden = false; $('#start').disabled = true;
+    for (const nombre of Object.values(JORNADAS)) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = nombre; b.setAttribute('aria-pressed', 'false');
+      b.onclick = () => { document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === b)); setJornada(nombre); };
+      $('#chips').appendChild(b);
+    }
+  }
+
+  // escalas 1 a 5
+  document.querySelectorAll('.scale').forEach(group => {
+    const name = group.dataset.name;
+    for (let v = 1; v <= 5; v++) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = v; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', 'false');
+      b.setAttribute('aria-label', v);
+      b.onclick = () => choose(group, name, v);
+      group.appendChild(b);
+    }
+  });
+
+  const GRID = ['acreditacion', 'catering', 'musica', 'conduccion'];
+  let advanceTimer;
+  function choose(group, name, v) {
+    answers[name] = v;
+    group.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', +b.textContent === v));
+    if (GRID.includes(name)) {
+      const n = GRID.filter(k => answers[k]).length;
+      $('#gridCount').textContent = n + ' de 4';
+      $('#gridNext').disabled = n < 4;
+    } else {
+      clearTimeout(advanceTimer);
+      advanceTimer = setTimeout(() => go(current + 1), 320); // avanza solo al elegir
+    }
+  }
+
+  function go(n, backwards) {
+    clearTimeout(advanceTimer);
+    steps[current].classList.remove('on', 'back');
+    current = n;
+    steps[n].classList.toggle('back', !!backwards);
+    steps[n].classList.add('on');
+    $('#bar').style.width = Math.min(n, LAST_Q) / LAST_Q * 100 + '%';
+    const showBack = n > 0 && n < DONE;
+    $('#back-nav').hidden = !showBack;
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  $('#start').onclick = () => go(1);
+  if (!token) { $('#sinLink').hidden = false; $('#pick').hidden = true; $('#start').disabled = true; $('#start').onclick = null; }
+  else if (yaEnviada()) { $('#graciasTexto').textContent = 'Ya habíamos recibido tus respuestas. ¡Gracias otra vez!'; go(DONE); }
+  $('#gridNext').onclick = () => go(5);
+  $('#back').onclick = () => go(current - 1, true);
+
+  $('#form').onsubmit = async e => {
+    e.preventDefault();
+    const send = $('#send');
+    send.disabled = true; send.textContent = 'Enviando…'; $('#err').hidden = true;
+    const slug = Object.keys(JORNADAS).find(k => JORNADAS[k] === jornada) || '';
+    const data = { t: token, jornada: slug, ...answers, comentario: $('#comentario').value.trim() };
+    const fallar = msg => {
+      $('#err').textContent = msg; $('#err').hidden = false;
+      send.disabled = false; send.textContent = 'Enviar encuesta';
+    };
+    if (!ENDPOINT) { console.log('Encuesta (sin ENDPOINT configurado):', data); go(DONE); return; }
+    let res;
+    try {
+      const r = await fetch(ENDPOINT, { method:'POST', body:new URLSearchParams(data) });
+      res = await r.json();
+    } catch {
+      return fallar('No pudimos enviar tus respuestas. Revisá tu conexión y probá de nuevo.');
+    }
+    if (res.ok || res.error === 'usado') {
+      if (!res.ok) $('#graciasTexto').textContent = 'Ya habíamos recibido tus respuestas. ¡Gracias otra vez!';
+      marcarEnviada(); go(DONE);
+    } else if (res.error === 'link') {
+      fallar('Este link no es válido. Abrí la encuesta desde el botón del mail que te mandamos.');
+    } else if (res.error === 'incompleta') {
+      fallar('Falta responder alguna pregunta. Volvé con "Anterior" y revisá.');
+    } else {
+      fallar('No pudimos guardar tus respuestas. Probá de nuevo en un minuto.');
+    }
+  };
+</script>
+</body>
+</html>
