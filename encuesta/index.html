@@ -118,6 +118,25 @@
   .check svg { width:42px; height:42px; }
   @keyframes pop { from { transform:scale(.4); opacity:0; } to { transform:none; opacity:1; } }
 
+  /* --- beneficio 20% (pantalla de gracias) --- */
+  .promo { position:relative; overflow:hidden; margin:28px auto 0; padding:26px 20px 22px; border-radius:22px;
+    background:#0d1520; color:#fff; text-align:center; box-shadow:0 14px 30px -14px rgba(13,21,32,.55); }
+  .promo::before { content:''; position:absolute; inset:0; opacity:.13;
+    background:url(fou-patron.png) 0 0 / 190px auto repeat; }
+  .promo > * { position:relative; }
+  .promo .tag { font-family:'Lexend'; font-weight:700; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--lime); }
+  .promo .intro { margin-top:10px; font-family:'Lexend'; font-weight:700; font-size:17px; line-height:1.3; }
+  .promo .off { margin-top:6px; font-family:'Lexend'; font-weight:800; font-size:56px; line-height:1; letter-spacing:-1px;
+    color:var(--lime); text-shadow:0 0 22px rgba(155,234,46,.45); }
+  .promo .prox { margin-top:4px; font-family:'Lexend'; font-weight:800; font-size:20px; line-height:1.2; }
+  .promo .comp { margin-top:12px; font-size:15px; line-height:1.4; color:#d6deea; }
+  .promo .qr { display:inline-flex; align-items:center; gap:8px; margin-top:16px; padding:8px 14px; border-radius:999px;
+    border:1.5px solid var(--lime); background:rgba(155,234,46,.08); font-weight:600; font-size:14px; }
+  .promo .qr svg { width:18px; height:18px; flex-shrink:0; color:var(--lime); }
+  .promo .web { display:block; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.15);
+    font-family:'Lexend'; font-weight:700; font-size:16px; color:#fff; text-decoration:none; }
+  .promo .web:hover { color:var(--lime); }
+
   /* --- pie --- */
   footer { padding:18px 20px calc(18px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:#fff; }
   .prod { display:flex; align-items:center; justify-content:center; gap:12px; text-decoration:none;
@@ -224,6 +243,18 @@
       <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#163a64" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
       <h1>¡<em>Gracias</em>!</h1>
       <p class="lead" id="graciasTexto">Recibimos tus respuestas. Nos vemos en la próxima capacitación.</p>
+      <div class="promo" role="note" aria-label="Beneficio: 20% de descuento en las próximas capacitaciones">
+        <div class="tag">Beneficio para vos</div>
+        <p class="intro">Por asistir a esta primera jornada tenés</p>
+        <p class="off">20% OFF</p>
+        <p class="prox">en las próximas capacitaciones</p>
+        <p class="comp">o podés compartir tu voucher con otro amigo, deportista o profesional</p>
+        <div class="qr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M17 21h4v-4M14 21v-3"/></svg>
+          Lo encontrás en el QR de tu acreditación
+        </div>
+        <a class="web" href="https://capacitaciones.fou.com.ar">capacitaciones.fou.com.ar</a>
+      </div>
       <div class="nav"><a class="btn full" href="https://capacitaciones.fou.com.ar">Ver próximas capacitaciones</a></div>
     </section>
 
