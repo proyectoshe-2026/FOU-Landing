@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IVESS en las Jornadas FOU</title>
+<!-- Informe privado para IVESS: no indexar ni archivar, y no enviar la dirección a otros sitios -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<link rel="icon" href="media/fou-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600&family=Montserrat:wght@600;700;800;900&display=swap">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<style>
+/* Layout: FOU's black venue world, lime accent, photos and clips from the jornadas. Single dark look, by brand. */
+:root{
+  --bg:#0B0C0C; --surface:#151717; --surface-2:#1E2121; --line:#2A2D2D; --fg:#F4F6F2; --muted:#A6ACA8;
+  --lime:#B5F35A; --lime-ink:#0B0C0C;
+  --display:"Montserrat",system-ui,sans-serif; --body:"Exo",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:clamp(28px,4.6vw,52px);font-weight:900}
+h3{font-size:20px;font-weight:800;letter-spacing:.01em}
+p{margin:0}
+.eyebrow{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--lime)}
+.lead{color:var(--muted);max-width:62ch;font-size:18px}
+.hl{color:var(--lime)}
+section{padding-block:clamp(56px,9vw,112px)}
+.head{display:flex;flex-direction:column;gap:16px;margin-bottom:clamp(32px,5vw,56px)}
+.fou-mark{display:inline-block;background:var(--fg);-webkit-mask:url(media/fou-logo.png) center/contain no-repeat;mask:url(media/fou-logo.png) center/contain no-repeat;aspect-ratio:700/132}
+.tbd{display:inline-block;border:1px dashed var(--lime);color:var(--lime);border-radius:6px;padding:0 8px;font-weight:600;font-size:.9em}
+
+/* Top bar */
+.top{position:absolute;inset:0 0 auto;z-index:3;padding-block:20px;background:linear-gradient(rgba(11,12,12,.7),rgba(11,12,12,0))}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.logos{display:flex;align-items:center;gap:18px}
+.logos .fou-mark{height:22px}
+.logos .sep{width:1px;height:26px;background:rgba(255,255,255,.35)}
+.logos img{height:28px;width:auto}
+.top .tag{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+
+/* Hero: headline on black at the top, then a wide band of the audience (cropped to the room, no walls) */
+.hero{padding-block:clamp(96px,11vw,128px) 0}
+.hero-text{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 48px;align-items:end}
+.hero-text .intro{display:flex;flex-direction:column;gap:16px}
+.hero-text .ivess{width:clamp(130px,15vw,200px);height:auto}
+.hero h1{font-size:clamp(30px,4.6vw,60px);font-weight:900;max-width:20ch}
+.hero .lead{color:#D9DEDA;font-size:clamp(17px,1.8vw,20px)}
+.slides{position:relative;margin:clamp(28px,4vw,44px) auto 0;max-width:1400px;aspect-ratio:2/1;overflow:hidden}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.slides img+img{opacity:0;animation:fade 30s infinite}
+.slides img:nth-child(2){animation-delay:5s}
+.slides img:nth-child(3){animation-delay:10s}
+.slides img:nth-child(4){animation-delay:15s}
+.slides img:nth-child(5){animation-delay:20s}
+.slides img:nth-child(6){animation-delay:25s}
+@keyframes fade{0%{opacity:0}4%{opacity:1}16.7%{opacity:1}20.7%{opacity:0}100%{opacity:0}}
+.slides figcaption{position:absolute;left:16px;bottom:14px;z-index:2;font-size:13px;font-family:var(--display);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+@media (min-width:1400px){.slides{border-radius:18px}}
+@media (prefers-reduced-motion:reduce){.slides img+img{animation:none}}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;border:1px solid rgba(255,255,255,.28);border-radius:999px}
+.chip.on{border-color:var(--lime);color:var(--lime)}
+
+/* Jornadas */
+.jornadas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.jornada{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.jornada img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.jornada .in{padding:22px;display:flex;flex-direction:column;gap:12px;flex-grow:1}
+.jornada .date{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.jornada h3{font-size:clamp(20px,2.2vw,26px)}
+.jornada p{color:var(--muted);font-size:15px}
+.stats{display:flex;flex-wrap:wrap;gap:22px;padding-top:14px;margin-top:auto;border-top:1px solid var(--line)}
+.stat b{display:block;font-family:var(--display);font-weight:900;font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.jornada.next-one{border-color:var(--lime)}
+.badge{align-self:flex-start;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--lime);color:var(--lime-ink);padding:6px 10px;border-radius:999px}
+.reach{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.8fr);gap:24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px}
+.reach .cities{display:flex;flex-wrap:wrap;gap:8px}
+.reach .cities span{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:15px;padding:8px 12px;border-radius:8px;background:var(--surface-2)}
+
+/* Presence */
+.presence{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;align-items:start}
+.clip{display:flex;flex-direction:column;gap:12px;margin:0}
+.clip video{width:100%;border-radius:14px;background:#000;aspect-ratio:9/16;object-fit:cover;display:block}
+.clip.screen{grid-column:span 2}
+.clip.screen video{aspect-ratio:4/3;object-fit:contain}
+.clip figcaption{font-size:14px;color:var(--muted)}
+.clip figcaption b{display:block;color:var(--fg);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:.04em;margin-bottom:2px}
+.meals{margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px;align-items:center}
+.meals p{color:var(--muted)}
+.meals .list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.meals .list div{background:var(--surface-2);border-radius:12px;padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.meals .list b{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:15px}
+.meals .list span{font-size:13px;color:var(--muted)}
+.points{margin-top:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.point{border-top:2px solid var(--lime);padding-top:14px;display:flex;flex-direction:column;gap:6px}
+.point h3{font-size:16px}
+.point p{color:var(--muted);font-size:15px}
+.photos{margin-top:40px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.photos figure{margin:0;position:relative;border-radius:14px;overflow:hidden}
+.photos img{width:100%;height:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.photos figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;font-size:13px;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+.photos .big{grid-column:span 2;grid-row:span 2}
+
+/* Momento IVESS */
+.momento{border-top:1px solid var(--line);position:relative;overflow:hidden;background:var(--bg) url(media/fou-patron.png) repeat;background-size:210px auto}
+.momento::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--bg) 0%,rgba(11,12,12,.93) 18%,rgba(11,12,12,.93) 82%,var(--bg) 100%)}
+.momento .wrap{position:relative}
+.momento-logo{width:clamp(140px,16vw,200px);height:auto}
+.when{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.when span{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:.06em;padding:10px 14px;border-radius:10px;background:var(--surface-2)}
+.why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-bottom:48px}
+.why p{color:var(--muted)}
+.why b{color:var(--fg)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:48px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.step .n{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;color:var(--lime)}
+.step p{color:var(--muted);font-size:15px}
+
+/* Game */
+.game{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,4vw,40px);display:flex;flex-direction:column;gap:20px}
+.game .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.dots{display:flex;gap:8px}
+.dots i{width:28px;height:6px;border-radius:3px;background:var(--line)}
+.dots i.done{background:var(--lime)}
+.game .topic{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.game blockquote{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(24px,3.6vw,40px);line-height:1.15;text-wrap:balance}
+.answers{display:flex;gap:12px;flex-wrap:wrap}
+.answers button,.next{font:inherit;font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:16px;padding:16px 26px;border-radius:12px;cursor:pointer;border:2px solid var(--lime);background:transparent;color:var(--fg);min-height:52px}
+.answers button:hover{background:rgba(181,243,90,.12)}
+.answers button:focus-visible,.next:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+.answers button[disabled]{cursor:default;opacity:.4}
+.answers button.right{background:var(--lime);color:var(--lime-ink);opacity:1}
+.reveal{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:18px}
+.reveal .verdict{font-family:var(--display);font-weight:900;font-size:28px;text-transform:uppercase;color:var(--lime)}
+.reveal p{color:#D2D7D3;max-width:70ch}
+.reveal small{color:var(--muted);font-size:13px}
+.next{background:var(--lime);color:var(--lime-ink);align-self:flex-start}
+.game .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:14px;align-items:center}
+.game .foot img{height:22px;width:auto}
+
+.gets{margin-top:56px}
+.gets ul{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+.gets li{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line);color:#DDE2DE}
+.gets li svg{flex:none;margin-top:3px}
+
+/* Next */
+.next-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.card .date{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.card p{color:var(--muted)}
+
+footer{border-top:1px solid var(--line);padding-block:48px 64px}
+footer .wrap{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;align-items:flex-end}
+.contact{display:flex;flex-direction:column;gap:6px}
+.contact b{font-family:var(--display);font-size:22px;font-weight:800;text-transform:uppercase}
+.contact span{color:var(--muted)}
+.contact .sel{user-select:all;color:var(--fg)}
+.contact a{color:var(--fg)}
+footer .logos .fou-mark{height:26px}
+footer .logos img{height:30px}
+
+@media (max-width:980px){
+  .jornadas{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .presence{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .clip.screen{grid-column:span 3}
+  .meals{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:720px){
+  .jornadas,.next-row,.why,.gets ul,.reach,.steps,.points{grid-template-columns:minmax(0,1fr)}
+  .hero-text{grid-template-columns:minmax(0,1fr)}
+  .hero-text .ivess{order:-1}
+  .slides{aspect-ratio:16/9}
+  .presence{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .clip.screen{grid-column:span 2}
+  .meals .list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .photos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .photos .big{grid-column:span 2;grid-row:auto}
+  .top .tag{display:none}
+}
+
+/* El logo de UNSAM viene en negro: sobre el fondo oscuro se pinta en blanco, como el de FOU */
+.logos img[src*="unsam-logo"]{filter:brightness(0) invert(1)}
+/* Celular: los logos del pie no entran en una línea a 390 px de ancho */
+@media (max-width:480px){footer .logos{flex-wrap:wrap;gap:12px 14px}footer .logos img{height:24px}footer .logos .fou-mark{height:22px}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logos" aria-label="FOU y Política y Gobierno UNSAM">
+      <span class="fou-mark" role="img" aria-label="FOU"></span>
+      <span class="sep" aria-hidden="true"></span>
+      <img src="media/unsam-logo.png" alt="Política y Gobierno UNSAM">
+    </div>
+    <span class="tag">Informe para IVESS · Noviembre 2026</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-text">
+    <div class="intro">
+      <div class="chips">
+        <span class="chip on">Silver sponsor</span>
+        <span class="chip">Jornadas FOU × UNSAM 2026</span>
+      </div>
+      <h1>IVESS junto a los mejores profesionales de la <span class="hl">medicina y el deporte argentino</span></h1>
+      <p class="lead">IVESS fue una de las marcas protagonistas de la jornada.</p>
+    </div>
+    <img class="ivess" src="media/ivess-blanco.png" alt="IVESS">
+  </div>
+  <figure class="slides">
+    <img src="media/slide-1.jpg" alt="Luis García explica sobre la camilla, frente a la pantalla">
+    <img src="media/slide-2.jpg" alt="Gustavo Ruiz frente a la imagen de Franco Colapinto" loading="lazy">
+    <img src="media/slide-3.jpg" alt="Luis García muestra un ejercicio de readaptación" loading="lazy">
+    <img src="media/slide-4.jpg" alt="El público de Kinesiología siguiendo la charla" loading="lazy">
+    <img src="media/slide-5.jpg" alt="Gustavo Ruiz presenta El desafío, con agua IVESS en el escenario" loading="lazy">
+    <img src="media/slide-6.jpg" alt="Luis García analiza datos biomecánicos en la pantalla" loading="lazy">
+  </figure>
+</section>
+
+<section style="padding-top:clamp(40px,6vw,72px)">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Lo que pasó y lo que viene</span>
+      <h2>Tres jornadas: la comunidad del deporte y la medicina <span class="hl">junto a IVESS</span></h2>
+      <p class="lead">Más de 160 profesionales: deportistas, kinesiólogos, psicólogos y nutricionistas.</p>
+    </div>
+    <div class="jornadas">
+      <article class="jornada">
+        <img src="media/kine-garcia.jpg" alt="Luis García trabaja sobre la camilla frente a la sala completa">
+        <div class="in">
+          <span class="date">Sábado 31/10 · 9 a 19 h</span>
+          <h3>Kinesiología deportiva</h3>
+          <p>Luis García, jefe de kinesiología de la Selección Argentina, con Pablo Capuchetti y Pablo Varela.</p>
+          <div class="stats">
+            <div class="stat"><b>80</b><span>profesionales</span></div>
+            <div class="stat"><b>10 h</b><span>de jornada</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="jornada">
+        <img src="media/psico-ruiz.jpg" alt="Gustavo Ruiz da su charla con una imagen de Franco Colapinto en pantalla">
+        <div class="in">
+          <span class="date">Sábado 14/11 · 9 a 13 h</span>
+          <h3>Psicología deportiva</h3>
+          <p>Gustavo Ruiz, psicólogo de Franco Colapinto, con Luciana Ortiz y Lisandro Aisa.</p>
+          <div class="stats">
+            <div class="stat"><b>70</b><span>profesionales</span></div>
+            <div class="stat"><b>4 h</b><span>de jornada</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="jornada next-one">
+        <img src="media/psico-pantalla.jpg" alt="La sala de la jornada frente a la pantalla del escenario">
+        <div class="in">
+          <span class="badge">Momento IVESS</span>
+          <span class="date">Sábado 21/11 · 9 a 16 h</span>
+          <h3>Nutrición deportiva</h3>
+          <p>Luciano Spena, nutricionista de la Selección Argentina de fútbol, con Fernando Luna.</p>
+          <div class="stats">
+            <div class="stat"><b>7 h</b><span>de jornada</span></div>
+            <div class="stat"><b>1</b><span>bloque propio de IVESS</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="reach">
+      <span class="eyebrow">Viajaron para estar</span>
+      <div class="cities">
+        <span>CABA</span><span>GBA</span><span>Córdoba</span><span>Rosario</span><span>Junín</span><span>Bahía Blanca</span><span>Miramar</span><span>La Pampa</span><span>San Luis</span><span>Paraguay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">IVESS en la sala</span>
+      <h2>La marca, presente <span class="hl">de principio a fin</span></h2>
+      <p class="lead">En la pantalla, en el tótem, en el escenario, en cada comida y en la mano de cada asistente.</p>
+    </div>
+    <div class="presence">
+      <figure class="clip screen">
+        <video src="media/pantalla-sponsors.mp4" poster="media/pantalla-sponsors-poster.jpg" muted autoplay loop playsinline preload="metadata"></video>
+        <figcaption><b>El video de sponsors en la pantalla</b>IVESS entre los Silver sponsors, en el loop del escenario.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="media/pieza-totem-ivess.mp4" poster="media/pieza-totem-ivess-poster.jpg" muted autoplay loop playsinline preload="metadata"></video>
+        <figcaption><b>La pieza del tótem</b>15 segundos de IVESS en cada vuelta.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="media/totem-sala.mp4" poster="media/totem-sala-poster.jpg" muted autoplay loop playsinline preload="metadata"></video>
+        <figcaption><b>El tótem en la sede</b>Con la sala de fondo.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="media/agua-asistentes.mp4" poster="media/agua-asistentes-poster.jpg" muted autoplay loop playsinline preload="metadata"></video>
+        <figcaption><b>Agua para la sala</b>IVESS en la mano de los asistentes.</figcaption>
+      </figure>
+    </div>
+
+    <div class="meals">
+      <div>
+        <span class="eyebrow">En cada comida</span>
+        <p style="margin-top:10px">En las dos jornadas, IVESS fue parte de todos los momentos de la mesa.</p>
+      </div>
+      <div class="list">
+        <div><b>Desayuno</b><span>Para arrancar la jornada</span></div>
+        <div><b>Almuerzo</b><span>En la sede, con toda la sala</span></div>
+        <div><b>Merienda</b><span>En la pausa de la tarde</span></div>
+        <div><b>Brindis</b><span>La opción para quienes no tomaban cerveza</span></div>
+      </div>
+    </div>
+
+    <div class="points">
+      <div class="point"><h3>Pantalla del escenario</h3><p>El video de sponsors, en loop frente a toda la sala.</p></div>
+      <div class="point"><h3>Tótem de sponsors</h3><p>Pieza propia de 15 segundos, durante toda la jornada.</p></div>
+      <div class="point"><h3>Agua en el escenario</h3><p>La hidratación de los disertantes, a la vista en cada foto.</p></div>
+    </div>
+
+    <div class="photos">
+      <figure class="big"><img src="media/kine-agua.jpg" alt="Luis García en el escenario, con botellas de agua IVESS junto al pizarrón"><figcaption>Kinesiología · el agua IVESS en el escenario</figcaption></figure>
+      <figure><img src="media/psico-agua.jpg" alt="Gustavo Ruiz en el escenario con una botella de agua al lado"><figcaption>Psicología · Gustavo Ruiz</figcaption></figure>
+      <figure><img src="media/kine-sala.jpg" alt="La sala de Kinesiología completa frente al escenario"><figcaption>Kinesiología · sala completa</figcaption></figure>
+      <figure><img src="media/psico-juego.jpg" alt="Asistentes de Psicología en una dinámica con pelota antes de empezar"><figcaption>Psicología · dinámica de apertura</figcaption></figure>
+      <figure><img src="media/psico-sala.jpg" alt="La sala de Psicología vista desde el escenario"><figcaption>Psicología · la sala desde el escenario</figcaption></figure>
+      <figure><img src="media/psico-diplomas.jpg" alt="Asistentes con sus diplomas UNSAM en el escenario"><figcaption>Psicología · diplomas UNSAM</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="momento" id="momento">
+  <div class="wrap">
+    <div class="head">
+      <img class="momento-logo" src="media/ivess-blanco.png" alt="IVESS">
+      <span class="eyebrow">Lo que viene · Jornada de Nutrición deportiva</span>
+      <h2>Momento IVESS: <span class="hl">¿Mito o verdad? Hidratación de campeones</span></h2>
+      <p class="lead">En la jornada más importante para la marca, Nutrición, IVESS pasa a ser protagonista: un bloque propio de trivia para los participantes.</p>
+      <div class="when">
+        <span>Sábado 21/11</span><span>9 a 16 h</span><span>Boedo · Fournier 2353</span>
+      </div>
+    </div>
+
+    <div class="why">
+      <p><b>La sala justa para el tema.</b> Nutricionistas y profesionales de la salud que todos los días le dicen a un deportista cuánto, cuándo y cómo hidratarse. La hidratación es parte del contenido de la jornada.</p>
+      <p><b>Con Luciano Spena</b>, nutricionista de la Selección Argentina de fútbol, junto a Fernando Luna. IVESS comparte escenario con ellos.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h3>La pantalla pregunta</h3><p>Una afirmación sobre hidratación y rendimiento, con la marca IVESS en pantalla.</p></div>
+      <div class="step"><span class="n">2</span><h3>La sala responde</h3><p>Verdadero o falso, a mano alzada. La primera mano que acierta se lleva un premio <span class="tbd">[PREMIO]</span>.</p></div>
+      <div class="step"><span class="n">3</span><h3>La ciencia valida</h3><p>La respuesta con su explicación y sus fuentes. Para ganar hay que seguir a @fou.arg.</p></div>
+    </div>
+
+    <div class="game" aria-live="polite">
+      <div class="bar">
+        <span class="eyebrow">Probalo vos: las 3 preguntas</span>
+        <div class="dots" id="dots"><i></i><i></i><i></i></div>
+      </div>
+      <span class="topic" id="topic"></span>
+      <blockquote id="claim"></blockquote>
+      <div class="answers">
+        <button type="button" id="btn-v">Verdadero</button>
+        <button type="button" id="btn-f">Falso</button>
+      </div>
+      <div class="reveal" id="reveal" hidden>
+        <span class="verdict" id="verdict"></span>
+        <p id="explain"></p>
+        <small id="source"></small>
+        <button type="button" class="next" id="btn-next">Siguiente pregunta</button>
+      </div>
+      <div class="foot">
+        <span>Así se va a jugar en la pantalla del 21/11.</span>
+        <img src="media/ivess-blanco.png" alt="IVESS">
+      </div>
+    </div>
+
+    <div class="gets">
+      <span class="eyebrow">Lo que se lleva IVESS el 21/11</span>
+      <ul>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Un bloque propio de trivia para los participantes, con su nombre.</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>La marca asociada a evidencia científica sobre hidratación.</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Premios entregados en el escenario, con la sala pendiente.</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Su presencia de siempre: pantalla, tótem, agua y cada comida.</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Registro en foto y video del Momento IVESS para sus redes.</li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5F35A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Mención en el contenido posterior de la jornada.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Lo que sigue</span>
+      <h2>El ciclo sigue en 2027</h2>
+      <p class="lead">Después de Nutrición quedan dos jornadas. Nos encantaría seguir con IVESS.</p>
+    </div>
+    <div class="next-row">
+      <div class="card"><span class="date">2027 · fecha a confirmar</span><h3>Gestión de equipos</h3><p>Julio Lamas, ex DT de la Selección Argentina de básquet.</p></div>
+      <div class="card"><span class="date">2027 · fecha a confirmar</span><h3>Preparación física</h3><p>Horacio Anselmi, preparador físico de Los Pumas y Las Leonas, con Esteban Pizzi.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="contact">
+      <span class="eyebrow">Contacto</span>
+      <b>Florencia Cortés</b>
+      <span>WhatsApp <span class="sel">+54 9 11 3695-2601</span></span>
+      <span>Instagram <a href="https://instagram.com/fou.arg">@fou.arg</a> · <a href="https://fou.com.ar">fou.com.ar</a></span>
+    </div>
+    <div class="logos">
+      <span class="fou-mark" role="img" aria-label="FOU"></span>
+      <span class="sep" aria-hidden="true"></span>
+      <img src="media/unsam-logo.png" alt="Política y Gobierno UNSAM">
+      <span class="sep" aria-hidden="true"></span>
+      <img src="media/ivess-blanco.png" alt="IVESS">
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var Q=[
+    {topic:'La cabeza también se deshidrata',claim:'“La deshidratación afecta más al cuerpo que a la cabeza.”',a:false,
+     explain:'Perder apenas un 2% del peso corporal en líquido ya baja la atención, la memoria de trabajo y el control emocional: aparecen más fatiga, tensión y mal humor. Hidratarse también es entrenar la cabeza.',
+     source:'Fuente: Wittbrodt y Millard-Stafford (2018) · Ganio et al. (2011) · Armstrong et al. (2012)'},
+    {topic:'Reponer después de entrenar',claim:'“Pesarse antes y después de entrenar sirve para saber cuánto líquido reponer.”',a:true,
+     explain:'Lo que bajás de peso en un entrenamiento es, casi todo, agua que se fue con el sudor. Por cada kilo perdido conviene tomar entre 1,25 y 1,5 litros, de a poco, en las horas siguientes.',
+     source:'Fuente: ACSM (Sawka et al., 2007) · Thomas, Erdman y Burke (2016) · Shirreffs et al. (1996)'},
+    {topic:'Nervios antes de competir',claim:'“El estrés y la ansiedad previa a competir pueden aumentar la pérdida de líquidos.”',a:true,
+     explain:'Los nervios activan el sistema nervioso simpático: aparece el “sudor frío” y la respiración se acelera, y con cada respiración también se pierde agua. Llegá hidratado y con la cabeza tranquila.',
+     source:'Fuente: Baker (2019) · Wilke et al. (2007) · Homma y Masaoka (2008)'}
+  ];
+  var i=0,hits=0;
+  var $=function(id){return document.getElementById(id)};
+  var bv=$('btn-v'),bf=$('btn-f'),next=$('btn-next'),dots=$('dots').children;
+  function show(){
+    var q=Q[i];
+    $('topic').textContent='Pregunta '+(i+1)+' de 3 · '+q.topic;
+    $('claim').textContent=q.claim;
+    $('reveal').hidden=true;
+    [bv,bf].forEach(function(b){b.disabled=false;b.className=''});
+    next.textContent=i<2?'Siguiente pregunta':'Volver a empezar';
+  }
+  function answer(v){
+    var q=Q[i],ok=v===q.a; if(ok)hits++;
+    bv.disabled=bf.disabled=true;
+    (q.a?bv:bf).className='right';
+    $('verdict').textContent=(q.a?'Verdadero':'Falso')+(ok?' · ¡Acertaste!':' · Esta vez no');
+    $('explain').textContent=q.explain;
+    $('source').textContent=q.source;
+    dots[i].className='done';
+    if(i===2){$('verdict').textContent+=' · '+hits+' de 3';}
+    $('reveal').hidden=false;
+    next.focus({preventScroll:true});
+  }
+  bv.addEventListener('click',function(){answer(true)});
+  bf.addEventListener('click',function(){answer(false)});
+  next.addEventListener('click',function(){
+    if(i<2){i++;}else{i=0;hits=0;for(var k=0;k<3;k++)dots[k].className='';}
+    show(); bv.focus({preventScroll:true});
+  });
+  show();
+})();
+</script>
+</body>
+</html>
